@@ -126,6 +126,17 @@ body {
 .seg button:focus-visible { outline: 2px solid var(--red); outline-offset: -4px; }
 .begin { display: inline-block; margin-top: 22px; color: var(--ink); font-family: "Yatra One", serif; text-decoration: none; border-bottom: 2px solid var(--red); }
 .begin .en { font-family: Spectral, Georgia, serif; font-style: italic; }
+.hero-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 26px; margin-top: 22px; }
+.hero-links .begin { margin-top: 0; }
+.watch {
+  display: inline-flex; align-items: center; gap: .5em; padding: 8px 18px 8px 14px; border-radius: 999px;
+  background: var(--ink); color: var(--paper-hi); text-decoration: none; font-family: "Yatra One", serif;
+  box-shadow: 0 3px 0 var(--red);
+}
+.watch svg { width: 1em; height: 1em; fill: currentColor; }
+.watch .en { font-family: Spectral, Georgia, serif; font-style: italic; }
+.watch:hover { background: #3a2d22; }
+.watch:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 
 /* ---------- chapters ---------- */
 .ch { max-width: 1040px; margin: 56px auto; padding: 0 16px; }
@@ -604,7 +615,10 @@ footer .en { display: block; font-family: Spectral, Georgia, serif; font-style: 
     <button type="button" data-set-lang="en" lang="en">English</button>
     <button type="button" data-set-lang="both">दोनों · Both</button>
   </div>
-  <div><a class="begin" href="#ch-0"><span class="hi" lang="hi">कहानी शुरू करें ↓</span><span class="en" lang="en"> Begin the story ↓</span></a></div>
+  <div class="hero-links">
+    <a class="begin" href="#ch-0"><span class="hi" lang="hi">कहानी शुरू करें ↓</span><span class="en" lang="en"> Begin the story ↓</span></a>
+    <a class="watch" href="animation.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="hi" lang="hi">एनिमेशन देखें</span><span class="en" lang="en"> Watch the animation</span></a>
+  </div>
 </header>
 
 <main>
@@ -844,6 +858,7 @@ footer .en { display: block; font-family: Spectral, Georgia, serif; font-style: 
     </div>
   </div></div>
   <p class="fin"><span class="hi" lang="hi">॥ समाप्त ॥</span><span class="en" lang="en"> The End</span></p>
+  <p style="text-align:center;margin:18px 0 0"><a class="watch" href="animation.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="hi" lang="hi">अब एनिमेशन देखें</span><span class="en" lang="en"> Now watch it come alive</span></a></p>
 </section>
 
 <!-- About -->

@@ -31,7 +31,18 @@ the seven traditional colours. Each one comes with a motif:
   to life by moonlight.
 - Works on phones, respects reduced-motion settings, and needs no build step.
 
+### The animation
+
+`animation.html` is a 1 minute 41 second animated short of the same story.
+Each motif draws itself line by line and then fills with colour, and a drop
+of that colour arcs into Champa's pot. The film ends with the whole kohbar
+wall, which comes alive at night. It has bilingual captions, an optional
+synthesised soundtrack (a tanpura drone, a bansuri-style tune in raag
+Bhupali, and bells), chapter buttons, a scrubber and fullscreen. Keyboard:
+Space plays or pauses, ← → skip five seconds.
+
 ### View it
 
-Open `index.html` in any browser. To publish it, enable **GitHub Pages**
-(Settings → Pages → deploy from the `main` branch, root folder).
+Open `index.html` (the story) or `animation.html` (the film) in any browser.
+To publish them, enable **GitHub Pages** (Settings → Pages → deploy from the
+`main` branch, root folder).
