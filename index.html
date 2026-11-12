@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="hi" data-lang="both">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>चंपा के सात रंग · Champa's Seven Colours</title>
+<meta name="description" content="एक मधुबनी कहानी — an original illustrated story in the style of Mithila (Madhubani) folk painting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Yatra+One&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f3e5c4;
+  --paper-hi: #fbf4e2;
+  --wash: #ecd6a4;
+  --ink: #1d1611;
+  --ink-2: #4a3b2c;
+  --soot: #3a2f27;
+  --red: #c8311f;
+  --yellow: #e9a91c;
+  --green: #3d7a3a;
+  --leaf: #86ad45;
+  --blue: #24418c;
+  --sky: #5679c4;
+  --orange: #e5701c;
+  --white: #fbf6ea;
+  --pink: #d9577a;
+  --clay: #a9532d;
+  --bamboo: #c9a24a;
+  --night: #121a40;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .32 0 0 0 0 .16 0 0 0 .10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  font-family: "Tiro Devanagari Hindi", "Noto Serif Devanagari", "Mangal", serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* language switching */
+[data-lang="hi"] .en { display: none !important; }
+[data-lang="en"] .hi { display: none !important; }
+
+/* ---------- art primitives (used inside the SVG sprite) ---------- */
+.k  { stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.kt { stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; fill: none; }
+.d  { stroke: var(--ink); stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; }
+.kc { stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.ds { stroke: var(--ink); stroke-width: 4.4; stroke-linejoin: round; stroke-linecap: round; }
+.dg  { stroke: var(--paper-hi); stroke-width: 2.4; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.dgs { stroke: var(--paper-hi); stroke-width: 1.4; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.ov { stroke: none; pointer-events: none; }
+
+.flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 2.4s ease-in-out infinite; }
+@keyframes flicker {
+  0%, 100% { transform: scale(1, 1) rotate(0deg); }
+  30% { transform: scale(.96, 1.05) rotate(-2deg); }
+  60% { transform: scale(1.03, .97) rotate(2deg); }
+}
+
+/* ---------- colour shelf ---------- */
+.shelf {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(243, 229, 196, .94);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-bottom: 3px double var(--ink);
+}
+.shelf-in {
+  max-width: 1040px; margin: 0 auto; padding: 6px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.shelf-label { font-family: "Yatra One", serif; font-size: .95rem; white-space: nowrap; }
+.pots { display: flex; gap: 4px; flex: 1; justify-content: center; }
+.pot {
+  appearance: none; background: none; border: 0; padding: 2px 0; margin: 0;
+  width: 46px; cursor: pointer; color: inherit; font: inherit;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  border-radius: 8px;
+}
+.pot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.pot svg { width: 28px; height: 31px; overflow: visible; }
+.pot .pb { fill: transparent; stroke: var(--ink); stroke-width: 2.2; stroke-dasharray: 3 3; transition: fill .9s ease, stroke-dasharray .3s; }
+.pot .pm { fill: var(--ink); opacity: .25; transition: opacity .6s; }
+.pot.full .pb { fill: var(--pc); stroke-dasharray: none; }
+.pot.full .pm { opacity: 1; }
+.pot.full svg { animation: plop .6s ease; }
+@keyframes plop { 40% { transform: translateY(-4px) scale(1.08); } }
+.pot small { font-size: .7rem; line-height: 1.2; }
+.shelf .langcycle {
+  appearance: none; border: 2px solid var(--ink); background: var(--paper-hi);
+  color: var(--ink); font: inherit; font-size: .8rem; border-radius: 999px;
+  padding: 3px 10px; cursor: pointer; white-space: nowrap;
+}
+
+/* ---------- hero ---------- */
+.hero { max-width: 1040px; margin: 0 auto; padding: 40px 16px 8px; text-align: center; }
+.hero .band {
+  height: 18px; margin: 0 auto 26px; max-width: 520px;
+  border: 3px solid var(--ink);
+  background:
+    repeating-linear-gradient(-45deg, var(--ink) 0 1.5px, transparent 1.5px 7px),
+    linear-gradient(90deg, var(--red) 0 14.28%, var(--yellow) 0 28.56%, var(--green) 0 42.84%, var(--blue) 0 57.12%, var(--orange) 0 71.4%, var(--white) 0 85.68%, var(--soot) 0);
+}
+.hero h1 {
+  font-family: "Yatra One", serif; font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 5rem); line-height: 1.1; margin: 0;
+}
+.hero h1 .en { display: block; font-family: Spectral, Georgia, serif; font-style: italic; font-size: .36em; color: var(--ink-2); margin-top: .35em; }
+[data-lang="en"] .hero h1 .en { font-size: .7em; font-style: normal; font-weight: 600; color: var(--ink); }
+.hero .kicker { font-size: 1.15rem; margin: 18px auto 0; max-width: 40ch; }
+.hero .kicker .en { display: block; font-family: Spectral, Georgia, serif; font-style: italic; color: var(--ink-2); font-size: 1rem; }
+.seg { display: inline-flex; margin-top: 24px; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: var(--paper-hi); }
+.seg button {
+  appearance: none; border: 0; background: none; color: var(--ink); font: inherit;
+  padding: 6px 16px; cursor: pointer; font-size: .95rem;
+}
+.seg button + button { border-left: 2px solid var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper-hi); }
+.seg button:focus-visible { outline: 2px solid var(--red); outline-offset: -4px; }
+.begin { display: inline-block; margin-top: 22px; color: var(--ink); font-family: "Yatra One", serif; text-decoration: none; border-bottom: 2px solid var(--red); }
+.begin .en { font-family: Spectral, Georgia, serif; font-style: italic; }
+.hero-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 26px; margin-top: 22px; }
+.hero-links .begin { margin-top: 0; }
+.watch {
+  display: inline-flex; align-items: center; gap: .5em; padding: 8px 18px 8px 14px; border-radius: 999px;
+  background: var(--ink); color: var(--paper-hi); text-decoration: none; font-family: "Yatra One", serif;
+  box-shadow: 0 3px 0 var(--red);
+}
+.watch svg { width: 1em; height: 1em; fill: currentColor; }
+.watch .en { font-family: Spectral, Georgia, serif; font-style: italic; }
+.watch:hover { background: #3a2d22; }
+.watch:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+/* ---------- chapters ---------- */
+.ch { max-width: 1040px; margin: 56px auto; padding: 0 16px; }
+.frame {
+  border: 3px solid var(--ink); padding: 9px;
+  background: repeating-linear-gradient(-45deg, var(--ink) 0 1.5px, transparent 1.5px 7px), var(--c);
+  box-shadow: 0 10px 30px rgba(60, 40, 10, .12);
+}
+.inner { border: 3px solid var(--ink); background: var(--paper-hi); display: grid; grid-template-columns: 1fr 1fr; }
+.art {
+  margin: 0; padding: 18px; display: grid; place-items: start center; border-right: 3px solid var(--ink);
+  background: radial-gradient(circle, var(--dot, rgba(29, 22, 17, .13)) 1.5px, transparent 1.9px) 0 0 / 18px 18px, var(--art-bg, var(--wash));
+}
+.flip .art { order: 2; border-right: 0; border-left: 3px solid var(--ink); }
+.art svg { width: 100%; max-width: 460px; height: auto; display: block; position: sticky; top: 92px; }
+.text { padding: 30px 34px; align-self: center; }
+.num {
+  display: inline-flex; gap: .5em; align-items: center;
+  font-family: "Yatra One", serif; font-size: .95rem; line-height: 1.4;
+  padding: 3px 14px; border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--c); color: var(--on-c, var(--ink)); margin: 0;
+}
+.num .en { font-family: Spectral, Georgia, serif; }
+h2 { font-family: "Yatra One", serif; font-weight: 400; font-size: clamp(1.7rem, 3.6vw, 2.3rem); margin: .45em 0 .55em; line-height: 1.25; }
+h2 .en { display: block; font-family: Spectral, Georgia, serif; font-style: italic; font-size: .55em; color: var(--ink-2); margin-top: .1em; }
+[data-lang="en"] h2 .en { font-size: 1em; font-style: normal; font-weight: 600; color: var(--ink); }
+.story-hi p { font-size: 1.17rem; line-height: 1.95; margin: 0 0 .75em; }
+.story-en p { font-family: Spectral, Georgia, serif; font-size: 1.03rem; line-height: 1.7; margin: 0 0 .7em; color: var(--ink-2); font-style: italic; }
+[data-lang="both"] .story-en { border-top: 2px dashed rgba(29, 22, 17, .35); padding-top: .9em; margin-top: .9em; }
+[data-lang="en"] .story-en p { font-style: normal; color: var(--ink); font-size: 1.12rem; }
+.sym { margin: 1.1em 0 0; padding: 10px 14px; background: var(--paper); border-left: 7px solid var(--c); font-size: .98rem; }
+.sym .en { display: block; font-family: Spectral, Georgia, serif; font-style: italic; color: var(--ink-2); }
+[data-lang="en"] .sym .en { font-style: normal; color: var(--ink); }
+.ch .text > * { transition: opacity .8s ease, transform .8s ease; }
+.js .ch:not(.seen) .text > * { opacity: 0; transform: translateY(12px); }
+
+/* ---------- finale ---------- */
+.finale .inner { grid-template-columns: 1fr; }
+.kohbar { margin: 0; padding: 0; background: var(--wash); }
+.kbar { display: flex; justify-content: center; padding: 12px 16px 14px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); background: var(--paper); }
+.kohbar svg { width: 100%; height: auto; display: block; }
+.kohbar .nightsky { opacity: 0; transition: opacity 1.8s ease; }
+.kohbar .stars { opacity: 0; transition: opacity 2.4s ease; }
+.kohbar.night .nightsky, .kohbar.night .stars { opacity: 1; }
+.kohbar .a { transform-box: fill-box; transform-origin: 50% 50%; }
+.kohbar.night .a-fish { animation: swim 3.2s ease-in-out infinite; }
+.kohbar.night .a-pea  { transform-origin: 50% 100%; animation: dance 2.6s ease-in-out infinite; }
+.kohbar.night .a-ele  { animation: bob 3s ease-in-out infinite; }
+.kohbar.night .a-moon { animation: glow 4s ease-in-out infinite; }
+.kohbar.night .a-tree { transform-origin: 50% 100%; animation: breeze 5s ease-in-out infinite; }
+.kohbar.night .twinkle { animation: twinkle 2.2s ease-in-out infinite; }
+.kohbar.night .twinkle:nth-child(3n) { animation-delay: .7s; }
+.kohbar.night .twinkle:nth-child(3n+1) { animation-delay: 1.4s; }
+@keyframes swim { 0%, 100% { transform: rotate(-7deg) translateX(-3px); } 50% { transform: rotate(7deg) translateX(3px); } }
+@keyframes dance { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.05) rotate(-2deg); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes glow { 0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 246, 214, 0)); } 50% { filter: drop-shadow(0 0 10px rgba(255, 246, 214, .9)); } }
+@keyframes breeze { 0%, 100% { transform: rotate(-1deg); } 50% { transform: rotate(1deg); } }
+@keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.nightbtn {
+  appearance: none; border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--paper-hi); color: var(--ink); font: inherit; font-size: .95rem;
+  padding: 6px 16px; cursor: pointer; box-shadow: 0 3px 0 var(--ink);
+}
+.nightbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+.nightbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.finale .text { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; padding: 30px 36px; }
+.finale .text > header { grid-column: 1 / -1; }
+.finale .story-en { border-top: 0 !important; padding-top: 0 !important; margin-top: 0 !important; }
+[data-lang="hi"] .finale .text, [data-lang="en"] .finale .text { grid-template-columns: 1fr; max-width: 72ch; margin: 0 auto; }
+.moral { grid-column: 1 / -1; text-align: center; font-family: "Yatra One", serif; font-size: 1.35rem; margin: 18px 0 0; padding-top: 18px; border-top: 3px double var(--ink); }
+.moral .en { display: block; font-family: Spectral, Georgia, serif; font-style: italic; font-size: 1.05rem; color: var(--ink-2); }
+.fin { text-align: center; font-family: "Yatra One", serif; font-size: 1.6rem; margin: 40px 0 0; }
+
+/* ---------- about ---------- */
+.about { max-width: 1040px; margin: 72px auto 0; padding: 0 16px; }
+.about > h2 { text-align: center; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+.card { background: var(--paper-hi); border: 3px solid var(--ink); outline: 1.5px solid var(--ink); outline-offset: -9px; padding: 22px 24px; }
+.card h3 { font-family: "Yatra One", serif; font-weight: 400; font-size: 1.3rem; margin: 0 0 .4em; }
+.card h3 .en { font-family: Spectral, Georgia, serif; font-weight: 600; font-size: .8em; color: var(--ink-2); margin-left: .4em; }
+[data-lang="en"] .card h3 .en { margin-left: 0; font-size: 1em; color: var(--ink); }
+.card p { margin: 0 0 .6em; }
+.card p.en { font-family: Spectral, Georgia, serif; color: var(--ink-2); }
+[data-lang="en"] .card p.en { color: var(--ink); }
+.swatches { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.swatches li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: center; }
+.swatches i { width: 26px; height: 26px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--sw); }
+.swatches .en { font-family: Spectral, Georgia, serif; color: var(--ink-2); }
+[data-lang="both"] .swatches .en::before { content: " · "; }
+footer { max-width: 1040px; margin: 64px auto 0; padding: 24px 16px 48px; text-align: center; border-top: 3px double var(--ink); font-size: .98rem; }
+footer .en { display: block; font-family: Spectral, Georgia, serif; font-style: italic; color: var(--ink-2); }
+
+@media (max-width: 760px) {
+  .inner { grid-template-columns: 1fr; }
+  .art, .flip .art { order: 0; border-right: 0; border-left: 0; border-bottom: 3px solid var(--ink); }
+  .art svg { max-width: 340px; }
+  .text { padding: 22px 18px; }
+  .finale .text { grid-template-columns: 1fr; padding: 22px 18px; }
+  .ch { margin: 36px auto; }
+  .frame { padding: 7px; }
+  .shelf-label { display: none; }
+  .pot { width: 38px; }
+  .pot small { font-size: .62rem; }
+  .shelf-in { padding: 6px 10px; gap: 6px; }
+}
+@media (max-width: 380px) {
+  .pot { width: 34px; }
+  .pot svg { width: 24px; height: 27px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js .ch:not(.seen) .text > * { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== SVG sprite: the motifs ===================== -->
+<svg id="sprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="p-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#1d1611" stroke-width="1.5"/>
+    </pattern>
+    <pattern id="p-hatch-v" width="5" height="5" patternUnits="userSpaceOnUse">
+      <line x1="2.5" y1="0" x2="2.5" y2="5" stroke="#1d1611" stroke-width="1.3"/>
+    </pattern>
+    <pattern id="p-dots" width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="4.5" cy="4.5" r="1.5" fill="#1d1611"/>
+    </pattern>
+    <pattern id="p-dots-w" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="1.7" fill="#fbf4e2"/>
+    </pattern>
+    <pattern id="p-scales" width="14" height="14" patternUnits="userSpaceOnUse">
+      <path d="M0 7 A7 7 0 0 1 14 7 M-7 14 A7 7 0 0 1 7 14 M7 14 A7 7 0 0 1 21 14" fill="none" stroke="#1d1611" stroke-width="1.3"/>
+    </pattern>
+    <pattern id="p-zig" width="12" height="8" patternUnits="userSpaceOnUse">
+      <path d="M0 8 L6 1 L12 8" fill="none" stroke="#1d1611" stroke-width="1.4"/>
+    </pattern>
+
+    <!-- small reusable bits -->
+    <g id="petal"><ellipse cx="0" cy="-8.5" rx="4.6" ry="8.2" class="ds" style="fill:var(--pf,#d9577a)"/></g>
+    <g id="flw">
+      <use href="#petal"/>
+      <use href="#petal" transform="rotate(60)"/>
+      <use href="#petal" transform="rotate(120)"/>
+      <use href="#petal" transform="rotate(180)"/>
+      <use href="#petal" transform="rotate(240)"/>
+      <use href="#petal" transform="rotate(300)"/>
+      <circle r="4.2" class="ds" fill="#e9a91c"/>
+    </g>
+    <g id="leaf">
+      <path class="ds" d="M0 0 C 8 -11, 26 -11, 34 0 C 26 11, 8 11, 0 0 Z" style="fill:var(--lf,#3d7a3a)"/>
+      <path class="kt" d="M3 0 L30 0 M12 0 l5 -5 M12 0 l5 5 M20 0 l5 -4 M20 0 l5 4"/>
+    </g>
+    <g id="pot">
+      <path class="d" d="M-34 0 C -50 24, -44 62, 0 66 C 44 62, 50 24, 34 0 Z" fill="#a9532d"/>
+      <path class="ds" d="M-45 20 C -20 29, 20 29, 45 20 L 46 34 C 20 43, -20 43, -46 34 Z" fill="#e9a91c"/>
+      <path class="ov" d="M-45 20 C -20 29, 20 29, 45 20 L 46 34 C 20 43, -20 43, -46 34 Z" fill="url(#p-zig)"/>
+      <path class="ds" d="M-22 -16 L22 -16 L 32 0 L -32 0 Z" fill="#a9532d"/>
+      <path class="ds" d="M-28 -24 H28 V-16 H-28 Z" fill="#a9532d"/>
+      <ellipse cx="0" cy="-24" rx="25" ry="4.5" fill="#1d1611"/>
+      <g fill="#1d1611"><circle cx="-24" cy="50" r="2.4"/><circle cx="-12" cy="54" r="2.4"/><circle cx="0" cy="55" r="2.4"/><circle cx="12" cy="54" r="2.4"/><circle cx="24" cy="50" r="2.4"/></g>
+    </g>
+    <g id="star4"><path class="ds" d="M0 -11 L2.8 -2.8 L11 0 L2.8 2.8 L0 11 L-2.8 2.8 L-11 0 L-2.8 -2.8 Z" fill="#e9a91c"/></g>
+  </defs>
+
+  <!-- Prologue: empty pots and a bamboo brush -->
+  <symbol id="m-pots" viewBox="0 0 300 300">
+    <path class="k" fill="none" d="M18 264 H282"/>
+    <path class="kt" d="M30 272 h20 M70 272 h30 M130 272 h40 M200 272 h30 M250 272 h20"/>
+    <use href="#pot" transform="translate(80,208) scale(.84)"/>
+    <use href="#pot" transform="translate(220,208) scale(.84)"/>
+    <use href="#pot" transform="translate(150,198)"/>
+    <!-- brush -->
+    <path class="ds" d="M50 104 L 226 54 L 230 64 L 54 114 Z" fill="#c9a24a"/>
+    <path class="kt" d="M100 90 l3 10 M160 73 l3 10 M206 60 l3 10"/>
+    <path class="ds" d="M226 54 C 244 42, 266 50, 262 62 C 258 72, 242 70, 230 64 Z" fill="#fbf6ea"/>
+    <path class="kt" d="M238 56 l14 2 M240 63 l14 0"/>
+    <!-- no empty space: flowers -->
+    <use href="#flw" transform="translate(40,160) scale(.9)" style="--pf:#c8311f"/>
+    <use href="#flw" transform="translate(262,160) scale(.9)" style="--pf:#24418c"/>
+    <use href="#flw" transform="translate(150,124) scale(.75)" style="--pf:#3d7a3a"/>
+    <use href="#flw" transform="translate(36,44) scale(.7)" style="--pf:#e5701c"/>
+    <use href="#flw" transform="translate(272,30) scale(.6)" style="--pf:#d9577a"/>
+  </symbol>
+
+  <!-- 1 Black: the lamp and its soot -->
+  <symbol id="m-diya" viewBox="0 0 300 300">
+    <!-- upturned clay lid that collects soot -->
+    <path class="d" d="M78 60 C 92 22, 208 22, 222 60 Z" fill="#a9532d"/>
+    <path class="ov" d="M78 60 C 92 22, 208 22, 222 60 Z" fill="url(#p-hatch)"/>
+    <ellipse class="ds" cx="150" cy="62" rx="74" ry="8" fill="#1d1611"/>
+    <!-- rising soot -->
+    <path class="k" fill="none" d="M150 102 C 138 96, 140 86, 150 84 C 160 82, 162 74, 152 70"/>
+    <path class="k" fill="none" d="M128 108 C 116 98, 122 88, 130 82"/>
+    <path class="k" fill="none" d="M172 108 C 184 98, 178 88, 170 82"/>
+    <!-- light -->
+    <path class="k" fill="none" d="M104 150 L86 146 M108 126 L92 114 M196 150 L214 146 M192 126 L208 114 M112 176 L96 184 M188 176 L204 184"/>
+    <!-- bowl -->
+    <path class="d" d="M60 198 C 80 258, 220 258, 240 198 Z" fill="#a9532d"/>
+    <path class="ov" d="M66 214 C 100 238, 200 238, 234 214 L 228 228 C 196 250, 104 250, 72 228 Z" fill="url(#p-hatch-v)"/>
+    <path class="kt" d="M66 214 C 100 238, 200 238, 234 214 M72 228 C 104 250, 196 250, 228 228"/>
+    <ellipse class="d" cx="150" cy="198" rx="90" ry="15" fill="#e9a91c"/>
+    <!-- stand -->
+    <path class="d" d="M134 250 L166 250 L172 270 L128 270 Z" fill="#a9532d"/>
+    <ellipse class="d" cx="150" cy="275" rx="58" ry="10" fill="#a9532d"/>
+    <!-- wick + flame -->
+    <path class="k" d="M150 186 L150 198"/>
+    <g class="flame">
+      <path class="d" d="M150 188 C 120 172, 122 138, 150 102 C 178 138, 180 172, 150 188 Z" fill="#e9a91c"/>
+      <path class="k" d="M150 180 C 136 170, 138 152, 150 132 C 162 152, 164 170, 150 180 Z" fill="#c8311f"/>
+    </g>
+  </symbol>
+
+  <!-- 2 Yellow: the sun -->
+  <symbol id="m-sun" viewBox="0 0 300 300">
+    <g id="ray-l"><path class="d" d="M150 14 L167 80 L133 80 Z" fill="#c8311f"/></g>
+    <use href="#ray-l" transform="rotate(45 150 150)"/>
+    <use href="#ray-l" transform="rotate(90 150 150)"/>
+    <use href="#ray-l" transform="rotate(135 150 150)"/>
+    <use href="#ray-l" transform="rotate(180 150 150)"/>
+    <use href="#ray-l" transform="rotate(225 150 150)"/>
+    <use href="#ray-l" transform="rotate(270 150 150)"/>
+    <use href="#ray-l" transform="rotate(315 150 150)"/>
+    <g id="ray-s" transform="rotate(22.5 150 150)"><path class="d" d="M150 38 L162 84 L138 84 Z" fill="#e5701c"/></g>
+    <use href="#ray-s" transform="rotate(45 150 150)"/>
+    <use href="#ray-s" transform="rotate(90 150 150)"/>
+    <use href="#ray-s" transform="rotate(135 150 150)"/>
+    <use href="#ray-s" transform="rotate(180 150 150)"/>
+    <use href="#ray-s" transform="rotate(225 150 150)"/>
+    <use href="#ray-s" transform="rotate(270 150 150)"/>
+    <use href="#ray-s" transform="rotate(315 150 150)"/>
+    <circle class="d" cx="150" cy="150" r="74" fill="#e9a91c"/>
+    <circle class="k" cx="150" cy="150" r="61" fill="none"/>
+    <circle cx="150" cy="150" r="67.5" fill="none" stroke="#1d1611" stroke-width="4.2" stroke-linecap="round" stroke-dasharray="0 10.6"/>
+    <!-- face -->
+    <path class="k" fill="none" d="M108 128 Q127 112 146 126 M154 126 Q173 112 192 128"/>
+    <path class="k" d="M112 142 Q127 128 142 142 Q127 153 112 142 Z" fill="#fbf4e2"/>
+    <path class="k" d="M158 142 Q173 128 188 142 Q173 153 158 142 Z" fill="#fbf4e2"/>
+    <circle cx="131" cy="141" r="5" fill="#1d1611"/>
+    <circle cx="177" cy="141" r="5" fill="#1d1611"/>
+    <path class="k" fill="none" d="M150 128 L 146 166 Q 150 171 157 166"/>
+    <path class="k" d="M134 184 Q150 175 166 184 Q150 196 134 184 Z" fill="#c8311f"/>
+    <path class="kt" d="M134 184 Q150 187 166 184"/>
+    <circle cx="117" cy="168" r="6.5" fill="#c8311f" opacity=".8"/>
+    <circle cx="183" cy="168" r="6.5" fill="#c8311f" opacity=".8"/>
+    <circle class="kc" cx="150" cy="110" r="4.5" fill="#c8311f"/>
+  </symbol>
+
+  <!-- 3 Red: a pair of fish -->
+  <symbol id="m-fish" viewBox="0 0 300 300">
+    <g id="fish" transform="translate(0,-8)">
+      <!-- fins & tail first so the body covers their roots -->
+      <path class="ds" d="M110 73 Q 128 34 180 44 Q 164 54 168 62 Z" style="fill:var(--ff,#e9a91c)"/>
+      <path class="ov" d="M110 73 Q 128 34 180 44 Q 164 54 168 62 Z" fill="url(#p-hatch)"/>
+      <path class="ds" d="M158 130 Q 148 160 118 158 Q 130 146 126 131 Z" style="fill:var(--ff,#e9a91c)"/>
+      <path class="ov" d="M158 130 Q 148 160 118 158 Q 130 146 126 131 Z" fill="url(#p-hatch)"/>
+      <path class="d" d="M64 118 L 18 82 Q 34 120 20 158 Z" style="fill:var(--ff,#e9a91c)"/>
+      <path class="ov" d="M64 118 L 18 82 Q 34 120 20 158 Z" fill="url(#p-hatch)"/>
+      <!-- body -->
+      <path class="d" d="M58 120 C 96 50, 206 38, 254 104 C 214 132, 118 142, 58 120 Z" style="fill:var(--fb,#c8311f)"/>
+      <path class="ov" d="M58 120 C 96 50, 206 38, 254 104 C 214 132, 118 142, 58 120 Z" fill="url(#p-scales)"/>
+      <path class="kt" d="M76 106 C 90 80, 98 76, 104 72 M76 124 C 92 104, 98 104, 106 104" />
+      <!-- head -->
+      <path class="ds" d="M209 69 C 228 74, 244 86, 254 104 C 240 112, 224 118, 208 123 Q 192 96 209 69 Z" style="fill:var(--fh,#e9a91c)"/>
+      <path class="kt" d="M218 72 Q 204 96 218 120"/>
+      <circle class="k" cx="234" cy="93" r="9" fill="#fbf4e2"/>
+      <circle cx="236" cy="93" r="4.2" fill="#1d1611"/>
+      <path class="k" fill="none" d="M253 104 L 241 108"/>
+    </g>
+    <use href="#fish" transform="rotate(180 150 150)" style="--fb:#e9a91c;--fh:#c8311f;--ff:#c8311f"/>
+    <use href="#flw" transform="translate(150,150) scale(.95)" style="--pf:#24418c"/>
+    <path class="k" fill="none" d="M18 26 q10 -8 20 0 t20 0 t20 0 M222 274 q10 -8 20 0 t20 0 t20 0"/>
+    <path class="kt" d="M26 40 q8 -6 16 0 t16 0 M234 288 q8 -6 16 0 t16 0"/>
+    <use href="#flw" transform="translate(270,40) scale(.7)" style="--pf:#d9577a"/>
+    <use href="#flw" transform="translate(30,262) scale(.7)" style="--pf:#d9577a"/>
+  </symbol>
+
+  <!-- 4 Green: the tree of life with parrots -->
+  <symbol id="m-tree" viewBox="0 0 300 300">
+    <path class="d" d="M80 292 Q150 262 220 292 Z" fill="#86ad45"/>
+    <g fill="none">
+      <path class="d" d="M150 206 C 120 186, 96 160, 70 120"/>
+      <path class="d" d="M150 206 C 180 186, 204 160, 230 120"/>
+      <path class="d" d="M150 164 C 128 144, 112 112, 104 70"/>
+      <path class="d" d="M150 164 C 172 144, 188 112, 196 70"/>
+      <path class="d" d="M150 170 L 150 40"/>
+    </g>
+    <path class="d" d="M130 290 C 138 252, 140 224, 142 162 L 158 162 C 160 224, 162 252, 170 290 Z" fill="#a9532d"/>
+    <path class="ov" d="M130 290 C 138 252, 140 224, 142 162 L 158 162 C 160 224, 162 252, 170 290 Z" fill="url(#p-hatch)"/>
+    <path class="k" fill="none" d="M132 286 Q 118 290 110 280 M168 286 Q 182 290 190 280"/>
+    <use href="#leaf" transform="translate(150,40) rotate(-90)"/>
+    <use href="#leaf" transform="translate(150,72) rotate(-150)" style="--lf:#86ad45"/>
+    <use href="#leaf" transform="translate(150,72) rotate(-30)" style="--lf:#86ad45"/>
+    <use href="#leaf" transform="translate(150,108) rotate(-160)"/>
+    <use href="#leaf" transform="translate(150,108) rotate(-20)"/>
+    <use href="#leaf" transform="translate(104,70) rotate(-105)" style="--lf:#86ad45"/>
+    <use href="#leaf" transform="translate(196,70) rotate(-75)" style="--lf:#86ad45"/>
+    <use href="#leaf" transform="translate(108,96) rotate(-170)"/>
+    <use href="#leaf" transform="translate(192,96) rotate(-10)"/>
+    <use href="#leaf" transform="translate(70,120) rotate(-130)" style="--lf:#86ad45"/>
+    <use href="#leaf" transform="translate(230,120) rotate(-50)" style="--lf:#86ad45"/>
+    <use href="#leaf" transform="translate(84,142) rotate(170)"/>
+    <use href="#leaf" transform="translate(216,142) rotate(10)"/>
+    <use href="#leaf" transform="translate(122,136) rotate(-120)" style="--lf:#86ad45"/>
+    <use href="#leaf" transform="translate(178,136) rotate(-60)" style="--lf:#86ad45"/>
+    <g fill="#e9a91c">
+      <circle class="ds" cx="128" cy="180" r="8"/>
+      <circle class="ds" cx="172" cy="180" r="8"/>
+      <circle class="ds" cx="120" cy="112" r="7"/>
+      <circle class="ds" cx="180" cy="112" r="7"/>
+    </g>
+    <g id="parrot" transform="translate(94,150)">
+      <path class="ds" d="M4 2 L -26 20 L -22 6 Z" fill="#3d7a3a"/>
+      <path class="ds" d="M0 0 C 4 -16, 24 -20, 34 -10 C 40 -4, 38 6, 30 10 C 18 16, 4 10, 0 0 Z" fill="#3d7a3a"/>
+      <path class="ds" d="M6 -2 C 12 -12, 24 -12, 26 -2 C 18 4, 10 4, 6 -2 Z" fill="#e9a91c"/>
+      <circle class="ds" cx="33" cy="-15" r="9" fill="#3d7a3a"/>
+      <path class="ds" d="M40 -19 Q 50 -14 41 -7 Z" fill="#c8311f"/>
+      <circle cx="35" cy="-17" r="2.3" fill="#1d1611"/>
+      <path class="kt" d="M25 -8 Q 32 -3 39 -8" stroke="#c8311f" style="stroke:#c8311f;stroke-width:2.4"/>
+      <path class="kt" d="M14 12 L14 18 M21 12 L21 18"/>
+    </g>
+    <use href="#parrot" transform="translate(300,0) scale(-1,1)"/>
+    <use href="#flw" transform="translate(36,236) scale(.8)" style="--pf:#c8311f"/>
+    <use href="#flw" transform="translate(264,236) scale(.8)" style="--pf:#24418c"/>
+    <use href="#flw" transform="translate(40,40) scale(.6)" style="--pf:#e5701c"/>
+    <use href="#flw" transform="translate(260,40) scale(.6)" style="--pf:#e5701c"/>
+  </symbol>
+
+  <!-- 5 Blue: the dancing peacock -->
+  <symbol id="m-peacock" viewBox="0 0 300 300">
+    <path class="d" d="M30 212 A120 120 0 0 1 270 212 Z" fill="#3d7a3a"/>
+    <path class="k" fill="none" d="M46 212 A104 104 0 0 1 254 212"/>
+    <path d="M38 212 A112 112 0 0 1 262 212" fill="none" stroke="#e9a91c" stroke-width="4.4" stroke-linecap="round" stroke-dasharray="0 11.2"/>
+    <g id="pk-line"><path class="kt" d="M150 170 L150 108"/></g>
+    <use href="#pk-line" transform="rotate(-70 150 212)"/>
+    <use href="#pk-line" transform="rotate(-50 150 212)"/>
+    <use href="#pk-line" transform="rotate(-30 150 212)"/>
+    <use href="#pk-line" transform="rotate(-10 150 212)"/>
+    <use href="#pk-line" transform="rotate(10 150 212)"/>
+    <use href="#pk-line" transform="rotate(30 150 212)"/>
+    <use href="#pk-line" transform="rotate(50 150 212)"/>
+    <use href="#pk-line" transform="rotate(70 150 212)"/>
+    <g id="pk-eye">
+      <path class="ds" d="M150 110 C 163 120, 163 138, 150 144 C 137 138, 137 120, 150 110 Z" fill="#e9a91c"/>
+      <ellipse class="kc" cx="150" cy="131" rx="7.5" ry="8.5" fill="#5679c4" style="stroke-width:2"/>
+      <circle cx="150" cy="132" r="3.6" fill="#1d1611"/>
+    </g>
+    <use href="#pk-eye" transform="rotate(-80 150 212)"/>
+    <use href="#pk-eye" transform="rotate(-60 150 212)"/>
+    <use href="#pk-eye" transform="rotate(-40 150 212)"/>
+    <use href="#pk-eye" transform="rotate(-20 150 212)"/>
+    <use href="#pk-eye" transform="rotate(20 150 212)"/>
+    <use href="#pk-eye" transform="rotate(40 150 212)"/>
+    <use href="#pk-eye" transform="rotate(60 150 212)"/>
+    <use href="#pk-eye" transform="rotate(80 150 212)"/>
+    <!-- legs -->
+    <path class="k" fill="none" d="M142 250 L 138 282 M158 250 L 162 282 M128 288 L138 282 L146 288 M154 288 L162 282 L172 288"/>
+    <!-- body -->
+    <path class="d" d="M150 256 C 120 248, 116 214, 136 194 C 146 182, 140 160, 144 146 C 147 134, 160 132, 163 142 C 166 152, 158 160, 160 176 C 162 192, 186 212, 176 240 C 170 250, 162 256, 150 256 Z" fill="#24418c"/>
+    <path class="ov" d="M150 256 C 120 248, 116 214, 136 194 C 146 182, 140 160, 144 146 C 147 134, 160 132, 163 142 C 166 152, 158 160, 160 176 C 162 192, 186 212, 176 240 C 170 250, 162 256, 150 256 Z" fill="url(#p-dots-w)"/>
+    <path class="ds" d="M140 204 C 150 192, 174 200, 174 228 C 164 236, 146 230, 140 204 Z" fill="#5679c4"/>
+    <path class="ov" d="M140 204 C 150 192, 174 200, 174 228 C 164 236, 146 230, 140 204 Z" fill="url(#p-hatch)"/>
+    <!-- crest & head -->
+    <path class="kt" d="M152 130 L 144 110 M154 129 L 154 106 M156 130 L 164 110" style="stroke-width:2.2"/>
+    <circle class="kc" cx="144" cy="108" r="4" fill="#e9a91c"/>
+    <circle class="kc" cx="154" cy="104" r="4" fill="#e9a91c"/>
+    <circle class="kc" cx="164" cy="108" r="4" fill="#e9a91c"/>
+    <circle class="ds" cx="155" cy="139" r="11" fill="#24418c"/>
+    <path class="ds" d="M165 135 L 179 140 L 165 145 Z" fill="#e9a91c"/>
+    <path class="kc" d="M151 138 Q 157 132 163 138 Q 157 142 151 138 Z" fill="#fbf4e2"/>
+    <circle cx="158" cy="138" r="2" fill="#1d1611"/>
+    <!-- rain & flowers fill the corners -->
+    <g class="kt" style="stroke:#24418c;stroke-width:2.4">
+      <path d="M24 30 l-4 12 M48 18 l-4 12 M30 70 l-4 12 M64 50 l-4 12 M246 22 l-4 12 M272 44 l-4 12 M238 62 l-4 12 M280 84 l-4 12"/>
+    </g>
+    <use href="#flw" transform="translate(40,262) scale(.8)" style="--pf:#c8311f"/>
+    <use href="#flw" transform="translate(260,262) scale(.8)" style="--pf:#e5701c"/>
+  </symbol>
+
+  <!-- 6 Orange: the wedding elephant -->
+  <symbol id="m-elephant" viewBox="0 0 300 300">
+    <!-- far legs -->
+    <path class="d" d="M90 200 h22 v58 q-11 6 -22 0 Z" fill="#b8520f"/>
+    <path class="d" d="M196 200 h22 v58 q-11 6 -22 0 Z" fill="#b8520f"/>
+    <!-- tail -->
+    <path class="k" fill="none" d="M70 150 C 58 168, 58 186, 56 202 M56 202 l-7 10 M56 202 l0 12 M56 202 l7 10"/>
+    <!-- body -->
+    <path class="d" d="M68 186 C 62 136, 100 106, 156 106 C 192 106, 214 116, 222 136 L 226 200 C 226 214, 218 222, 204 222 L 90 222 C 76 222, 70 206, 68 186 Z" fill="#e5701c"/>
+    <!-- near legs with anklets -->
+    <g id="eleg">
+      <path class="d" d="M112 204 h26 v60 q-13 6 -26 0 Z" fill="#e5701c"/>
+      <path class="kt" d="M112 242 h26 M112 250 h26"/>
+      <g fill="#1d1611"><circle cx="117" cy="246" r="1.8"/><circle cx="125" cy="246" r="1.8"/><circle cx="133" cy="246" r="1.8"/></g>
+      <path class="kt" d="M115 263 a4 3 0 0 1 8 0 M127 263 a4 3 0 0 1 8 0"/>
+    </g>
+    <use href="#eleg" transform="translate(104,0)"/>
+    <!-- saddle cloth (jhool) -->
+    <path class="d" d="M100 112 C 126 104, 166 104, 188 112 L 194 184 Q 184 196 174 184 Q 164 196 154 184 Q 144 196 134 184 Q 124 196 114 184 Q 104 196 96 184 Z" fill="#c8311f"/>
+    <path class="ds" d="M112 124 L 178 124 L 182 172 L 108 172 Z" fill="#e9a91c"/>
+    <path class="ov" d="M112 124 L 178 124 L 182 172 L 108 172 Z" fill="url(#p-dots)"/>
+    <use href="#flw" transform="translate(145,148) scale(1.05)" style="--pf:#24418c"/>
+    <!-- trunk: an outlined thick stroke with ring wrinkles -->
+    <path d="M250 160 C 262 192, 256 222, 270 238 C 280 248, 292 236, 284 226" fill="none" stroke="#1d1611" stroke-width="25" stroke-linecap="round"/>
+    <path d="M250 160 C 262 192, 256 222, 270 238 C 280 248, 292 236, 284 226" fill="none" stroke="#e5701c" stroke-width="18" stroke-linecap="round"/>
+    <path d="M252 168 C 262 192, 256 222, 270 238" fill="none" stroke="#1d1611" stroke-width="12" stroke-dasharray="2 9"/>
+    <!-- head -->
+    <path class="d" d="M192 124 C 196 90, 250 82, 262 118 C 270 142, 264 164, 250 172 C 232 182, 200 170, 192 124 Z" fill="#e5701c"/>
+    <path class="ds" d="M226 94 C 238 86, 254 92, 258 106 L 246 116 L 236 104 Z" fill="#c8311f"/>
+    <g fill="#e9a91c"><circle class="kc" cx="240" cy="99" r="2.6"/><circle class="kc" cx="250" cy="102" r="2.6"/></g>
+    <!-- ear -->
+    <path class="d" d="M202 118 C 180 110, 166 140, 174 164 C 180 182, 206 184, 214 164 C 218 148, 216 126, 202 118 Z" fill="#c8311f"/>
+    <path class="ov" d="M202 118 C 180 110, 166 140, 174 164 C 180 182, 206 184, 214 164 C 218 148, 216 126, 202 118 Z" fill="url(#p-hatch)"/>
+    <!-- eye & tusk -->
+    <path class="k" d="M228 126 Q 239 117 250 126 Q 239 133 228 126 Z" fill="#fbf4e2"/>
+    <circle cx="242" cy="125" r="3.6" fill="#1d1611"/>
+    <path class="ds" d="M244 170 C 254 180, 266 184, 276 178 C 266 188, 252 188, 240 176 Z" fill="#fbf6ea"/>
+    <!-- fill the sky -->
+    <use href="#flw" transform="translate(44,60) scale(.85)" style="--pf:#d9577a"/>
+    <use href="#flw" transform="translate(120,58) scale(.65)" style="--pf:#3d7a3a"/>
+    <use href="#flw" transform="translate(276,60) scale(.75)" style="--pf:#24418c"/>
+    <path class="k" fill="none" d="M24 282 h252"/>
+    <path class="kt" d="M36 290 h30 M100 290 h40 M180 290 h40 M244 290 h22"/>
+  </symbol>
+
+  <!-- 7 White: the crescent moon -->
+  <symbol id="m-moon" viewBox="0 0 300 300">
+    <use href="#star4" transform="translate(236,64)"/>
+    <use href="#star4" transform="translate(262,128) scale(.8)"/>
+    <use href="#star4" transform="translate(226,206) scale(.9)"/>
+    <use href="#star4" transform="translate(272,252) scale(.7)"/>
+    <use href="#star4" transform="translate(40,36) scale(.75)"/>
+    <use href="#star4" transform="translate(34,262) scale(.8)"/>
+    <use href="#star4" transform="translate(196,150) scale(.65)"/>
+    <g fill="#fbf6ea"><circle cx="268" cy="30" r="2.5"/><circle cx="210" cy="104" r="2"/><circle cx="252" cy="176" r="2.2"/><circle cx="196" cy="262" r="2.5"/><circle cx="20" cy="150" r="2"/><circle cx="80" cy="18" r="2"/><circle cx="100" cy="284" r="2.2"/></g>
+    <path class="d" d="M193 71 A90 90 0 1 0 193 229 C 172 222, 152 212, 146 200 C 138 198, 132 192, 136 187 C 130 185, 129 180, 134 177 C 129 175, 129 170, 135 168 C 136 164, 142 160, 152 155 C 142 150, 132 147, 130 138 C 128 120, 142 94, 193 71 Z" fill="#fbf6ea"/>
+    <path d="M186 80 A80 80 0 1 0 186 220" fill="none" stroke="#1d1611" stroke-width="3.6" stroke-linecap="round" stroke-dasharray="0 9.4"/>
+    <path class="kt" fill="none" d="M88 120 Q 103 109 118 117"/>
+    <path class="k" d="M92 132 Q 105 121 118 132 Q 105 140 92 132 Z" fill="#fbf4e2"/>
+    <circle cx="110" cy="131" r="3.8" fill="#1d1611"/>
+    <circle cx="108" cy="168" r="6.5" fill="#d9577a" opacity=".85"/>
+    <circle class="kc" cx="124" cy="104" r="3.6" fill="#c8311f"/>
+    <path class="kt" d="M131 178 l7 0" style="stroke:#c8311f;stroke-width:3"/>
+  </symbol>
+</svg>
+
+<!-- ===================== Colour shelf ===================== -->
+<nav class="shelf" aria-label="रंगों की हाँडियाँ / Colour pots">
+  <div class="shelf-in">
+    <span class="shelf-label"><span class="hi" lang="hi">चंपा की हाँडियाँ</span><span class="en" lang="en"> Champa's pots</span></span>
+    <div class="pots" id="pots">
+      <button class="pot" data-target="ch-1" style="--pc:#1d1611" aria-label="काला / Black"><svg viewBox="0 0 40 44" aria-hidden="true"><path class="pb" d="M9 13 C 1 22, 3 40, 20 42 C 37 40, 39 22, 31 13 Z"/><rect class="pm" x="11" y="5" width="18" height="7" rx="2"/></svg><small>काला</small></button>
+      <button class="pot" data-target="ch-2" style="--pc:#e9a91c" aria-label="पीला / Yellow"><svg viewBox="0 0 40 44" aria-hidden="true"><path class="pb" d="M9 13 C 1 22, 3 40, 20 42 C 37 40, 39 22, 31 13 Z"/><rect class="pm" x="11" y="5" width="18" height="7" rx="2"/></svg><small>पीला</small></button>
+      <button class="pot" data-target="ch-3" style="--pc:#c8311f" aria-label="लाल / Red"><svg viewBox="0 0 40 44" aria-hidden="true"><path class="pb" d="M9 13 C 1 22, 3 40, 20 42 C 37 40, 39 22, 31 13 Z"/><rect class="pm" x="11" y="5" width="18" height="7" rx="2"/></svg><small>लाल</small></button>
+      <button class="pot" data-target="ch-4" style="--pc:#3d7a3a" aria-label="हरा / Green"><svg viewBox="0 0 40 44" aria-hidden="true"><path class="pb" d="M9 13 C 1 22, 3 40, 20 42 C 37 40, 39 22, 31 13 Z"/><rect class="pm" x="11" y="5" width="18" height="7" rx="2"/></svg><small>हरा</small></button>
+      <button class="pot" data-target="ch-5" style="--pc:#24418c" aria-label="नीला / Blue"><svg viewBox="0 0 40 44" aria-hidden="true"><path class="pb" d="M9 13 C 1 22, 3 40, 20 42 C 37 40, 39 22, 31 13 Z"/><rect class="pm" x="11" y="5" width="18" height="7" rx="2"/></svg><small>नीला</small></button>
+      <button class="pot" data-target="ch-6" style="--pc:#e5701c" aria-label="नारंगी / Orange"><svg viewBox="0 0 40 44" aria-hidden="true"><path class="pb" d="M9 13 C 1 22, 3 40, 20 42 C 37 40, 39 22, 31 13 Z"/><rect class="pm" x="11" y="5" width="18" height="7" rx="2"/></svg><small>नारंगी</small></button>
+      <button class="pot" data-target="ch-7" style="--pc:#fbf6ea" aria-label="सफ़ेद / White"><svg viewBox="0 0 40 44" aria-hidden="true"><path class="pb" d="M9 13 C 1 22, 3 40, 20 42 C 37 40, 39 22, 31 13 Z"/><rect class="pm" x="11" y="5" width="18" height="7" rx="2"/></svg><small>सफ़ेद</small></button>
+    </div>
+    <button class="langcycle" id="langcycle" type="button" aria-label="भाषा बदलें / Change language">अ / A</button>
+  </div>
+</nav>
+
+<!-- ===================== Hero ===================== -->
+<header class="hero">
+  <div class="band" aria-hidden="true"></div>
+  <h1><span class="hi" lang="hi">चंपा के सात रंग</span><span class="en" lang="en">Champa's Seven Colours</span></h1>
+  <p class="kicker">
+    <span class="hi" lang="hi">एक मधुबनी कहानी</span>
+    <span class="en" lang="en">A Madhubani tale — an original story told in the spirit of Mithila's folk painting</span>
+  </p>
+  <div class="seg" role="group" aria-label="भाषा / Language">
+    <button type="button" data-set-lang="hi" lang="hi">हिंदी</button>
+    <button type="button" data-set-lang="en" lang="en">English</button>
+    <button type="button" data-set-lang="both">दोनों · Both</button>
+  </div>
+  <div class="hero-links">
+    <a class="begin" href="#ch-0"><span class="hi" lang="hi">कहानी शुरू करें ↓</span><span class="en" lang="en"> Begin the story ↓</span></a>
+    <a class="watch" href="animation.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="hi" lang="hi">एनिमेशन देखें</span><span class="en" lang="en"> Watch the animation</span></a>
+  </div>
+</header>
+
+<main>
+
+<!-- Prologue -->
+<section class="ch" id="ch-0" style="--c:#a9532d;--on-c:#fbf4e2">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t0"><title id="t0">तीन खाली हाँडियाँ और बाँस की कूची / Three empty pots and a bamboo brush</title><use href="#m-pots" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num"><span class="hi" lang="hi">शुरुआत</span><span class="en" lang="en">The beginning</span></p>
+      <h2><span class="hi" lang="hi">खाली हाँडियाँ</span><span class="en" lang="en">The empty pots</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>मिथिला के एक छोटे-से गाँव में, जहाँ पोखरों में मछलियाँ तैरती थीं और आँगन में तुलसी महकती थी, चंपा नाम की एक लड़की रहती थी।</p>
+        <p>उसकी दीदी सुनयना की शादी होने वाली थी। मिथिला में शादी से पहले घर की औरतें कोहबर की दीवारों पर चित्र बनाती हैं — कमल, बाँस, मछली, सूरज और चाँद। इस बार नानी ने कहा, “कोहबर चंपा बनाएगी।”</p>
+        <p>चंपा खुशी से उछल पड़ी। पर जब उसने रंगों की हाँडियाँ खोलीं — सब खाली थीं।</p>
+        <p>नानी मुस्कुराईं, “रंग बाज़ार से नहीं आते, बिटिया। रंग माँगे जाते हैं — धरती से, पेड़ों से, आग से। जा, माँग ला।” चंपा ने बाँस की एक पतली टहनी के सिरे पर रुई लपेटी, और उसकी कूची तैयार हो गई।</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>In a small village in Mithila, where fish swam in the ponds and tulsi grew in every courtyard, there lived a girl named Champa.</p>
+        <p>Her elder sister Sunaina was soon to be married. In Mithila, before a wedding, the women of the house paint the walls of the kohbar — the wedding chamber — with lotuses, bamboo, fish, the sun and the moon. This year, Nani said, “Champa will paint the kohbar.”</p>
+        <p>Champa jumped for joy. But when she opened the colour pots, every one was empty.</p>
+        <p>Nani smiled. “Colours aren't bought in the market, little one. Colours are asked for — from the earth, from the trees, from fire. Go and ask.” Champa wrapped a tuft of cotton around the tip of a thin bamboo twig, and her brush was ready.</p>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- 1 Black -->
+<section class="ch flip" id="ch-1" data-pot="0" style="--c:#3a2f27;--on-c:#fbf4e2">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t1"><title id="t1">दीया और उसकी कालिख / A clay lamp gathering soot on an upturned lid</title><use href="#m-diya" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num">१ · <span class="hi" lang="hi">काला</span><span class="en" lang="en">Black</span></p>
+      <h2><span class="hi" lang="hi">दीये की कालिख</span><span class="en" lang="en">Soot from the lamp</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>सबसे पहले चंपा नानी के दीये के पास गई। नानी ने दीये की लौ के ऊपर मिट्टी का एक ढक्कन उलटा रख दिया। सुबह तक ढक्कन पर काली-काली कालिख जम गई थी।</p>
+        <p>नानी ने उसमें बबूल का गोंद मिलाया और बोलीं, “मधुबनी में हर चित्र एक काली रेखा से शुरू होता है। रेखा पक्की हो, तो कहानी खुद चल पड़ती है।”</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>First, Champa went to Nani's lamp. Nani set a clay lid upside down above the flame. By morning, the lid was coated in soft black soot.</p>
+        <p>Nani mixed it with gum from the babool tree and said, “In Madhubani, every painting begins with a black line. If the line is sure, the story walks on its own.”</p>
+      </div>
+      <p class="sym"><span class="hi" lang="hi">चिह्न: दीया — ज्ञान और हर शुभ काम की शुरुआत</span><span class="en" lang="en">Motif: the lamp — knowledge, and the start of every good thing</span></p>
+    </div>
+  </div></div>
+</section>
+
+<!-- 2 Yellow -->
+<section class="ch" id="ch-2" data-pot="1" style="--c:#e9a91c">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t2"><title id="t2">मुस्कुराता सूरज / The smiling sun</title><use href="#m-sun" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num">२ · <span class="hi" lang="hi">पीला</span><span class="en" lang="en">Yellow</span></p>
+      <h2><span class="hi" lang="hi">माँ की हल्दी</span><span class="en" lang="en">Ma's turmeric</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>फिर चंपा माँ की रसोई में गई। माँ ने सिल पर हल्दी की गाँठें पीसीं और उसमें थोड़ा-सा पानी मिलाया। रसोई सुनहरी हो गई, जैसे सुबह का सूरज भीतर आ गया हो।</p>
+        <p>माँ ने कहा, “कोहबर में सूरज ज़रूर बनाना। सूरज के बिना कोई दिन शुरू नहीं होता।”</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>Next, Champa went to her mother's kitchen. Ma ground knobs of turmeric on the grinding stone and stirred in a little water. The kitchen turned golden, as if the morning sun had stepped inside.</p>
+        <p>“Paint the sun in the kohbar,” Ma said. “No day begins without it.”</p>
+      </div>
+      <p class="sym"><span class="hi" lang="hi">चिह्न: सूरज — जीवन और ऊर्जा</span><span class="en" lang="en">Motif: the sun — life and energy</span></p>
+    </div>
+  </div></div>
+</section>
+
+<!-- 3 Red -->
+<section class="ch flip" id="ch-3" data-pot="2" style="--c:#c8311f;--on-c:#fbf4e2">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t3"><title id="t3">मछलियों का जोड़ा / A pair of fish circling a flower</title><use href="#m-fish" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num">३ · <span class="hi" lang="hi">लाल</span><span class="en" lang="en">Red</span></p>
+      <h2><span class="hi" lang="hi">कुसुम के फूल</span><span class="en" lang="en">Kusum flowers</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>खेत की मेड़ पर बूढ़ी काकी कुसुम के फूल चुन रही थीं। उन्होंने चंपा की झोली फूलों से भर दी।</p>
+        <p>“इन्हें पानी में भिगो देना, लाल रंग निकल आएगा,” काकी बोलीं। “और कोहबर में मछलियों का जोड़ा बनाना — जहाँ मछली, वहाँ सुख।”</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>At the edge of the field, old Kaki was picking kusum flowers. She filled Champa's cloth bag to the brim.</p>
+        <p>“Soak them in water and the red will come out,” Kaki said. “And paint a pair of fish in the kohbar — where there are fish, there is happiness.”</p>
+      </div>
+      <p class="sym"><span class="hi" lang="hi">चिह्न: मछली — सौभाग्य और समृद्धि</span><span class="en" lang="en">Motif: the fish — good fortune and abundance</span></p>
+    </div>
+  </div></div>
+</section>
+
+<!-- 4 Green -->
+<section class="ch" id="ch-4" data-pot="3" style="--c:#3d7a3a;--on-c:#fbf4e2">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t4"><title id="t4">जीवन-वृक्ष पर दो तोते / Two parrots in the tree of life</title><use href="#m-tree" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num">४ · <span class="hi" lang="hi">हरा</span><span class="en" lang="en">Green</span></p>
+      <h2><span class="hi" lang="hi">बेल के पत्ते</span><span class="en" lang="en">Leaves of the bel tree</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>गाँव के बीच बेल का एक पुराना पेड़ था। चंपा उसके नीचे खड़ी सोच ही रही थी कि ऊपर बैठे एक तोते ने चोंच से कुछ पत्ते गिरा दिए।</p>
+        <p>चंपा ने पत्तों को पीसा तो हरा रंग निकला — गहरा, ठंडा, बारिश जैसा। उसने तोते से कहा, “तुम्हें भी कोहबर में जगह मिलेगी — तुम्हारे पेड़ के साथ।”</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>In the middle of the village stood an old bel tree. Champa was standing beneath it, wondering where to begin, when a parrot perched above nipped off a few leaves and let them fall.</p>
+        <p>Champa crushed the leaves and out came green — deep and cool, like the rain. “You'll have a place in the kohbar too,” she told the parrot, “along with your tree.”</p>
+      </div>
+      <p class="sym"><span class="hi" lang="hi">चिह्न: जीवन-वृक्ष — परिवार और पीढ़ियाँ</span><span class="en" lang="en">Motif: the tree of life — family and the generations</span></p>
+    </div>
+  </div></div>
+</section>
+
+<!-- 5 Blue -->
+<section class="ch flip" id="ch-5" data-pot="4" style="--c:#24418c;--on-c:#fbf4e2">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t5"><title id="t5">नाचता मोर / A peacock dancing with its tail spread</title><use href="#m-peacock" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num">५ · <span class="hi" lang="hi">नीला</span><span class="en" lang="en">Blue</span></p>
+      <h2><span class="hi" lang="hi">जुलाहे चाचा का नील</span><span class="en" lang="en">The weaver's indigo</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>जुलाहे चाचा अपने आँगन में धागे रँग रहे थे। उनकी नाँद में नील का पानी ऐसा था, जैसे आसमान का एक टुकड़ा उतर आया हो।</p>
+        <p>चाचा ने एक कटोरी भर दी और हँसकर बोले, “नीले से मोर बनाना। शादी के घर में मोर नाचे, तो प्रेम बना रहता है।”</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>Weaver Chacha was dyeing threads in his courtyard. The indigo water in his vat looked as if a piece of the sky had come down to rest.</p>
+        <p>Chacha filled a small bowl and laughed. “Paint a peacock with the blue. When a peacock dances in a wedding house, love stays.”</p>
+      </div>
+      <p class="sym"><span class="hi" lang="hi">चिह्न: मोर — प्रेम और उल्लास</span><span class="en" lang="en">Motif: the peacock — love and joy</span></p>
+    </div>
+  </div></div>
+</section>
+
+<!-- 6 Orange -->
+<section class="ch" id="ch-6" data-pot="5" style="--c:#e5701c">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t6"><title id="t6">सजा हुआ हाथी / A decorated wedding elephant</title><use href="#m-elephant" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num">६ · <span class="hi" lang="hi">नारंगी</span><span class="en" lang="en">Orange</span></p>
+      <h2><span class="hi" lang="hi">पलाश के फूल</span><span class="en" lang="en">Palash blossoms</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>लौटते हुए रास्ते में पलाश के पेड़ों के नीचे ज़मीन पर फूलों की आग-सी बिछी थी। चंपा ने फूल बटोरे और उन्हें उबाला, तो चटक नारंगी रंग बन गया।</p>
+        <p>उसे बारात के हाथी की याद आई — सजा-धजा, झूमता हुआ। “हाथी भी बनेगा,” उसने तय किया, “क्योंकि हाथी जहाँ जाता है, वहाँ बरकत ले जाता है।”</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>On the way home, the ground beneath the palash trees was carpeted with fallen blossoms, like a spread of fire. Champa gathered them and boiled them into a bright, bold orange.</p>
+        <p>It reminded her of the elephant in a wedding procession — dressed up and swaying. “There will be an elephant too,” she decided, “because wherever an elephant goes, it brings plenty with it.”</p>
+      </div>
+      <p class="sym"><span class="hi" lang="hi">चिह्न: हाथी — समृद्धि और शुभ</span><span class="en" lang="en">Motif: the elephant — prosperity and good omen</span></p>
+    </div>
+  </div></div>
+</section>
+
+<!-- 7 White -->
+<section class="ch flip" id="ch-7" data-pot="6" style="--c:#fbf6ea;--art-bg:#121a40;--dot:rgba(251,246,234,.13)">
+  <div class="frame"><div class="inner">
+    <figure class="art">
+      <svg viewBox="0 0 300 300" role="img" aria-labelledby="t7"><title id="t7">तारों के बीच चाँद / A crescent moon with a face, among stars</title><use href="#m-moon" width="300" height="300"/></svg>
+    </figure>
+    <div class="text">
+      <p class="num">७ · <span class="hi" lang="hi">सफ़ेद</span><span class="en" lang="en">White</span></p>
+      <h2><span class="hi" lang="hi">चावल का पिठार</span><span class="en" lang="en">Rice paste</span></h2>
+      <div class="story-hi hi" lang="hi">
+        <p>शाम को चंपा थककर घर लौटी। “छह रंग मिल गए, नानी, पर सफ़ेद कहाँ से लाऊँ?”</p>
+        <p>नानी ने भिगोए हुए चावल उसके हाथ में रख दिए। “इसे खुद पीस। सफ़ेद रंग दूसरों से नहीं, अपने हाथों से आता है।” चंपा ने चावल पीसा, तो पिठार चाँदनी जैसा उजला निकला।</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>In the evening, Champa came home tired. “I've found six colours, Nani — but where do I find white?”</p>
+        <p>Nani placed a handful of soaked rice in her palms. “Grind it yourself. White doesn't come from others; it comes from your own hands.” Champa ground the rice, and the paste came out as bright as moonlight.</p>
+      </div>
+      <p class="sym"><span class="hi" lang="hi">चिह्न: चाँद — शीतलता और शांति। इसी पिठार से मिथिला के आँगनों में अरिपन बनते हैं।</span><span class="en" lang="en">Motif: the moon — coolness and calm. The same rice paste is used to draw aripan on Mithila's courtyard floors.</span></p>
+    </div>
+  </div></div>
+</section>
+
+<!-- Finale: the kohbar -->
+<section class="ch finale" id="ch-8" style="--c:#c8311f;--on-c:#fbf4e2">
+  <div class="frame"><div class="inner">
+    <figure class="kohbar" id="kohbar">
+      <svg viewBox="0 0 600 400" role="img" aria-labelledby="t8">
+        <title id="t8">चंपा का कोहबर: सूरज, चाँद, जीवन-वृक्ष, मोर, हाथी और मछलियों का जोड़ा / Champa's finished kohbar wall</title>
+        <defs>
+          <radialGradient id="moonglow" cx="88%" cy="16%" r="55%">
+            <stop offset="0" stop-color="#fff6d6" stop-opacity=".45"/>
+            <stop offset="1" stop-color="#fff6d6" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="600" height="400" fill="#ecd6a4"/>
+        <rect class="nightsky" width="600" height="400" fill="#121a40"/>
+        <rect class="nightsky" width="600" height="400" fill="url(#moonglow)"/>
+        <g class="stars" fill="#fff6d6">
+          <circle class="twinkle" cx="150" cy="30" r="2.4"/><circle class="twinkle" cx="168" cy="120" r="2"/><circle class="twinkle" cx="436" cy="34" r="2.4"/>
+          <circle class="twinkle" cx="420" cy="128" r="2"/><circle class="twinkle" cx="300" cy="250" r="2.2"/><circle class="twinkle" cx="24" cy="150" r="2"/>
+          <circle class="twinkle" cx="580" cy="160" r="2.2"/><circle class="twinkle" cx="214" cy="226" r="1.8"/><circle class="twinkle" cx="388" cy="230" r="1.8"/>
+        </g>
+        <use href="#flw" transform="translate(150,70) scale(.8)" style="--pf:#d9577a"/>
+        <use href="#flw" transform="translate(450,74) scale(.8)" style="--pf:#d9577a"/>
+        <use href="#flw" transform="translate(300,384) scale(.7)" style="--pf:#24418c"/>
+        <use href="#flw" transform="translate(22,24) scale(.6)" style="--pf:#3d7a3a"/>
+        <use href="#flw" transform="translate(578,24) scale(.6)" style="--pf:#3d7a3a"/>
+        <g transform="translate(180,0) scale(.8)"><use class="a a-tree" href="#m-tree" width="300" height="300"/></g>
+        <g transform="translate(14,8) scale(.42)"><use class="a" href="#m-sun" width="300" height="300"/></g>
+        <g transform="translate(460,8) scale(.42)"><use class="a a-moon" href="#m-moon" width="300" height="300"/></g>
+        <g transform="translate(18,144) scale(.8)"><use class="a a-pea" href="#m-peacock" width="300" height="300"/></g>
+        <g transform="translate(342,148) scale(.8)"><use class="a a-ele" href="#m-elephant" width="300" height="300"/></g>
+        <g transform="translate(228,236) scale(.48)"><use class="a a-fish" href="#m-fish" width="300" height="300"/></g>
+        <rect x="6" y="6" width="588" height="388" fill="none" stroke="#1d1611" stroke-width="3"/>
+      </svg>
+    </figure>
+    <div class="kbar">
+      <button class="nightbtn" id="nightbtn" type="button" aria-pressed="false"><span class="hi" lang="hi">☾ रात होने दो</span><span class="en" lang="en"> Let night fall</span></button>
+    </div>
+    <div class="text">
+      <header>
+        <p class="num">८ · <span class="hi" lang="hi">कोहबर</span><span class="en" lang="en">The kohbar</span></p>
+        <h2><span class="hi" lang="hi">सातों रंग, एक दीवार</span><span class="en" lang="en">Seven colours, one wall</span></h2>
+      </header>
+      <div class="story-hi hi" lang="hi">
+        <p>अगले दिन चंपा ने दीवार पर पहली काली रेखा खींची — फिर दूसरी, उसके साथ-साथ, ताकि हर रेखा दोहरी हो। रेखाओं के बीच उसने रंग भरे: पीला सूरज, लाल मछलियाँ, हरा पेड़, नीला मोर, नारंगी हाथी, सफ़ेद चाँद। जहाँ जगह बची, वहाँ फूल और बिंदियाँ भर दीं — क्योंकि मधुबनी में कोई कोना खाली नहीं छोड़ा जाता।</p>
+        <p>उस रात, जब सब सो गए, चाँद की रोशनी कोहबर पर पड़ी। चंपा को लगा, मछलियाँ धीरे से तैरीं, मोर ने पंख फैलाए, और हाथी ने सूँड़ उठाकर आशीर्वाद दिया।</p>
+        <p>सुबह नानी ने दीवार देखी और चंपा का माथा चूम लिया। “देखा? रंग हाँडियों में नहीं थे, बिटिया। रंग तेरे चारों ओर थे — और कहानी तेरी रेखा में।”</p>
+      </div>
+      <div class="story-en en" lang="en">
+        <p>The next day, Champa drew the first black line on the wall — then a second right beside it, so that every line was doubled. Between the lines she filled in colour: a yellow sun, red fish, a green tree, a blue peacock, an orange elephant, a white moon. Wherever space was left, she filled it with flowers and dots — because in Madhubani, no corner is left empty.</p>
+        <p>That night, when everyone was asleep, moonlight fell on the kohbar. Champa was sure the fish swam a little, the peacock spread its feathers, and the elephant raised its trunk in blessing.</p>
+        <p>In the morning, Nani looked at the wall and kissed Champa's forehead. “You see? The colours were never in the pots, little one. They were all around you — and the story was in your line.”</p>
+      </div>
+      <p class="moral"><span class="hi" lang="hi">रंग चारों ओर हैं; कहानी रेखा में है।</span><span class="en" lang="en">The colours are all around us; the story is in the line.</span></p>
+    </div>
+  </div></div>
+  <p class="fin"><span class="hi" lang="hi">॥ समाप्त ॥</span><span class="en" lang="en"> The End</span></p>
+  <p style="text-align:center;margin:18px 0 0"><a class="watch" href="animation.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span class="hi" lang="hi">अब एनिमेशन देखें</span><span class="en" lang="en"> Now watch it come alive</span></a></p>
+</section>
+
+<!-- About -->
+<section class="about" aria-labelledby="about-h">
+  <h2 id="about-h"><span class="hi" lang="hi">मधुबनी चित्रकला के बारे में</span><span class="en" lang="en">About Madhubani painting</span></h2>
+  <div class="cards">
+    <article class="card">
+      <h3><span class="hi" lang="hi">कहाँ से</span><span class="en" lang="en">Where it comes from</span></h3>
+      <p class="hi" lang="hi">मधुबनी या मिथिला चित्रकला बिहार और नेपाल के तराई इलाक़े, यानी मिथिला क्षेत्र की लोक-कला है। परंपरा से इसे औरतें बनाती आई हैं — त्योहारों और शादियों पर, ताज़ी लिपी मिट्टी की दीवारों और आँगन में।</p>
+      <p class="en" lang="en">Madhubani, or Mithila, painting is the folk art of the Mithila region of Bihar and the Nepal Terai. Traditionally women made it, on freshly plastered mud walls and courtyard floors, for festivals and weddings.</p>
+    </article>
+    <article class="card">
+      <h3><span class="hi" lang="hi">पहचान</span><span class="en" lang="en">How to recognise it</span></h3>
+      <p class="hi" lang="hi">दोहरी काली रेखाएँ, कोई खाली जगह नहीं, प्रकृति और पुराण के चिह्न — मछली, मोर, कमल, बाँस, सूरज-चाँद — और बड़ी आँखों वाले चेहरे।</p>
+      <p class="en" lang="en">Doubled black outlines, no empty space, motifs from nature and myth (fish, peacocks, lotus, bamboo, sun and moon) and faces with large, expressive eyes.</p>
+      <p class="hi" lang="hi">प्रमुख शैलियाँ: भरनी (रंग भरना), कचनी (महीन रेखाएँ), तांत्रिक, गोदना और कोहबर।</p>
+      <p class="en" lang="en">Main styles: Bharni (filled colour), Kachni (fine line-work), Tantrik, Godna and Kohbar.</p>
+    </article>
+    <article class="card">
+      <h3><span class="hi" lang="hi">सात रंग</span><span class="en" lang="en">The seven colours</span></h3>
+      <ul class="swatches">
+        <li><i style="--sw:#1d1611"></i><span><span class="hi" lang="hi">काला — दीये की कालिख, बबूल का गोंद</span><span class="en" lang="en">Black: lamp soot with babool gum</span></span></li>
+        <li><i style="--sw:#e9a91c"></i><span><span class="hi" lang="hi">पीला — हल्दी</span><span class="en" lang="en">Yellow: turmeric</span></span></li>
+        <li><i style="--sw:#c8311f"></i><span><span class="hi" lang="hi">लाल — कुसुम के फूल</span><span class="en" lang="en">Red: kusum (safflower) blossoms</span></span></li>
+        <li><i style="--sw:#3d7a3a"></i><span><span class="hi" lang="hi">हरा — बेल के पत्ते</span><span class="en" lang="en">Green: bel (wood-apple) leaves</span></span></li>
+        <li><i style="--sw:#24418c"></i><span><span class="hi" lang="hi">नीला — नील</span><span class="en" lang="en">Blue: indigo</span></span></li>
+        <li><i style="--sw:#e5701c"></i><span><span class="hi" lang="hi">नारंगी — पलाश के फूल</span><span class="en" lang="en">Orange: palash blossoms</span></span></li>
+        <li><i style="--sw:#fbf6ea"></i><span><span class="hi" lang="hi">सफ़ेद — चावल का पिठार</span><span class="en" lang="en">White: ground rice paste</span></span></li>
+      </ul>
+    </article>
+    <article class="card">
+      <h3><span class="hi" lang="hi">दीवार से दुनिया तक</span><span class="en" lang="en">From walls to the world</span></h3>
+      <p class="hi" lang="hi">1934 के बिहार भूकंप के बाद टूटे घरों की भीतरी दीवारों पर बने चित्र अंग्रेज़ अफ़सर विलियम जी. आर्चर की नज़र में आए। 1960 के दशक के अकाल के दौरान कलाकार औरतें काग़ज़ पर चित्र बनाने लगीं, और यह कला दुनिया भर में पहुँची। सीता देवी, गंगा देवी, महासुंदरी देवी और बौआ देवी जैसी कलाकारों को पद्मश्री से सम्मानित किया गया।</p>
+      <p class="en" lang="en">After the 1934 Bihar earthquake, paintings on the exposed inner walls of damaged homes caught the eye of British officer William G. Archer. During the drought of the late 1960s, women artists began painting on paper, which carried the art around the world. Artists such as Sita Devi, Ganga Devi, Mahasundari Devi and Baua Devi have received the Padma Shri.</p>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span class="hi" lang="hi">एक मौलिक कहानी — मिथिला की उन औरतों के नाम, जिन्होंने दीवारों को कहानियाँ सुनाना सिखाया।</span>
+  <span class="en" lang="en">An original story, for the women of Mithila who taught walls to tell stories. Illustrations are drawn in code as a tribute to the style, not copies of any painting.</span>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+
+  // 1. Madhubani double outlines: every .d / .ds shape gets a thin paper-coloured
+  //    line traced down its middle, turning one thick stroke into two parallel ones.
+  document.querySelectorAll('.d, .ds').forEach(function (el) {
+    var gap = el.cloneNode(false);
+    gap.removeAttribute('id');
+    gap.removeAttribute('style');
+    gap.setAttribute('fill', 'none');
+    gap.setAttribute('class', el.classList.contains('ds') ? 'dgs' : 'dg');
+    var ref = el;
+    while (ref.nextElementSibling && ref.nextElementSibling.classList.contains('ov')) ref = ref.nextElementSibling;
+    ref.after(gap);
+  });
+
+  // 2. Language: हिंदी / English / both
+  var KEY = 'champa-lang', ORDER = ['both', 'hi', 'en'];
+  var LABEL = { both: 'अ + A', hi: 'अ', en: 'A' };
+  var cycle = document.getElementById('langcycle');
+  function setLang(l) {
+    if (ORDER.indexOf(l) < 0) l = 'both';
+    root.dataset.lang = l;
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.setLang === l));
+    });
+    cycle.textContent = LABEL[l];
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  var saved = 'both';
+  try { saved = localStorage.getItem(KEY) || 'both'; } catch (e) {}
+  setLang(saved);
+  document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+    b.addEventListener('click', function () { setLang(b.dataset.setLang); });
+  });
+  cycle.addEventListener('click', function () {
+    setLang(ORDER[(ORDER.indexOf(root.dataset.lang) + 1) % ORDER.length]);
+  });
+
+  // 3. Fill Champa's pots as each colour's chapter is read
+  var pots = document.querySelectorAll('.pot');
+  pots.forEach(function (p) {
+    p.addEventListener('click', function () {
+      var t = document.getElementById(p.dataset.target);
+      if (t) t.scrollIntoView({ block: 'start' });
+    });
+  });
+  var sections = document.querySelectorAll('.ch');
+  function reveal(sec) {
+    sec.classList.add('seen');
+    var i = sec.dataset.pot;
+    if (i !== undefined && pots[i]) pots[i].classList.add('full');
+    if (sec.id === 'ch-8') pots.forEach(function (p) { p.classList.add('full'); });
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.3 });
+    sections.forEach(function (s) { io.observe(s); });
+  } else {
+    sections.forEach(reveal);
+  }
+
+  // 4. Let night fall on the kohbar
+  var kohbar = document.getElementById('kohbar');
+  var nightbtn = document.getElementById('nightbtn');
+  nightbtn.addEventListener('click', function () {
+    var on = kohbar.classList.toggle('night');
+    nightbtn.setAttribute('aria-pressed', String(on));
+    nightbtn.innerHTML = on
+      ? '<span class="hi" lang="hi">☀ सुबह होने दो</span><span class="en" lang="en"> Let morning come</span>'
+      : '<span class="hi" lang="hi">☾ रात होने दो</span><span class="en" lang="en"> Let night fall</span>';
+  });
+})();
+</script>
+</body>
+</html>
