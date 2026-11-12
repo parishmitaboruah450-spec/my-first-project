@@ -7,6 +7,59 @@ window.Film = (function () {
   var anims = [], hooks = [];
   var F = { NS: NS, TOTAL: 0, anims: anims };
 
+  /* Story clock -> film clock. Scenes are written on the story clock; the narration decides how long each
+     stretch really lasts. Each line's stretch (to the next line) lasts at least as long as the line itself,
+     and every stretch is scaled by one shared factor k chosen so the film keeps its total length. */
+  var knots = null;
+  F.setVoice = function (v) { F.VOICE = v; knots = null; };
+  function build() {
+    var end = F.S && F.S.end;
+    if (!F.VOICE || !end) return null;
+    var ls = F.VOICE.lines.slice().sort(function (a, b) { return a.a - b.a; }), GAP = F.VOICE.gap || 0.32;
+    var a = [0], d = [0];
+    ls.forEach(function (l) { a.push(l.a); d.push(l.d); });
+    a.push(end);
+    function lengths(k) { var L = []; for (var i = 0; i < a.length - 1; i++) L.push(Math.max(d[i] ? d[i] + GAP : 0, k * (a[i + 1] - a[i]))); return L; }
+    function sum(L) { return L.reduce(function (x, y) { return x + y; }, 0); }
+    var lo = 0, hi = 2;
+    for (var it = 0; it < 60; it++) { var mid = (lo + hi) / 2; if (sum(lengths(mid)) > end) hi = mid; else lo = mid; }
+    var L = lengths(lo), ks = [[0, 0]], f = 0;
+    for (var j = 0; j < L.length; j++) { f += L[j]; ks.push([a[j + 1], f]); }
+    ls.forEach(function (l) { l.f = W(l.a, ks); });
+    F.warpK = lo;
+    return ks;
+  }
+  function W(t, ks) {
+    if (!ks) return t;
+    if (t <= 0) return t;
+    for (var i = 1; i < ks.length; i++) if (t <= ks[i][0]) {
+      var A0 = ks[i - 1], A1 = ks[i], s = A1[0] - A0[0];
+      return s > 0 ? A0[1] + (t - A0[0]) * (A1[1] - A0[1]) / s : A1[1];
+    }
+    var Z = ks[ks.length - 1]; return Z[1] + (t - Z[0]);
+  }
+  F.W = function (t) { if (!knots) knots = build(); return W(t, knots); };
+  F.Winv = function (f) {
+    if (!knots) knots = build();
+    if (!knots || f <= 0) return f;
+    for (var i = 1; i < knots.length; i++) if (f <= knots[i][1]) {
+      var A0 = knots[i - 1], A1 = knots[i], s = A1[1] - A0[1];
+      return s > 0 ? A0[0] + (f - A0[1]) * (A1[0] - A0[0]) / s : A1[0];
+    }
+    var Z = knots[knots.length - 1]; return Z[0] + (f - Z[1]);
+  };
+  // the narration line that starts at story time t (if any), with its film-clock start f and length d
+  F.lineAt = function (t) {
+    if (!F.VOICE) return null;
+    F.W(0);
+    var ls = F.VOICE.lines, best = null;
+    for (var i = 0; i < ls.length; i++) if (Math.abs(ls[i].a - t) < 0.06) best = ls[i];
+    if (!best) return null;
+    var next = null;
+    ls.forEach(function (l) { if (l.f > best.f + 0.01 && (!next || l.f < next.f)) next = l; });
+    return { f: best.f, d: best.d, text: best.text, cap: best.cap, nextF: next ? next.f : Infinity };
+  };
+
   F.mk = function (tag, attrs, parent) {
     var e = document.createElementNS(NS, tag);
     if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
@@ -22,6 +75,9 @@ window.Film = (function () {
 
   // One animation per element + property. pts = [[seconds, value], ...]
   F.T = function (el, prop, pts, ease) {
+    return F.Traw(el, prop, pts.map(function (q) { var r = q.slice(); r[0] = F.W(q[0]); return r; }), ease);
+  };
+  F.Traw = function (el, prop, pts, ease) {
     var t0 = Math.max(0, pts[0][0]), t1 = pts[pts.length - 1][0], dur = Math.max(t1 - t0, 0.001);
     var kf = pts.map(function (p) {
       var f = { offset: Math.min(1, Math.max(0, (p[0] - t0) / dur)), easing: p[2] || ease || 'ease-in-out' };
@@ -36,7 +92,7 @@ window.Film = (function () {
     o = o || {};
     if (o.box !== false) { el.style.transformBox = o.box || 'fill-box'; el.style.transformOrigin = o.origin || '50% 50%'; }
     var a = el.animate(frames, {
-      delay: start * 1000, duration: period * 1000, iterations: Infinity,
+      delay: F.W(start) * 1000, duration: period * 1000, iterations: Infinity,
       direction: o.direction || 'alternate', easing: o.easing || 'ease-in-out', fill: o.fill || 'both'
     });
     a.pause(); anims.push(a); return a;
@@ -87,8 +143,8 @@ window.Film = (function () {
 
   var clock = null;
   F.finish = function (total) {
-    F.TOTAL = total;
-    clock = F.T(document.createElement('i'), 'opacity', [[0, 0], [total, 1]], 'linear');
+    F.TOTAL = F.W(total);
+    clock = F.Traw(document.createElement('i'), 'opacity', [[0, 0], [F.TOTAL, 1]], 'linear');
   };
   F.now = function () { return clock ? Math.min(F.TOTAL, (clock.currentTime || 0) / 1000) : 0; };
   F.seek = function (t) {

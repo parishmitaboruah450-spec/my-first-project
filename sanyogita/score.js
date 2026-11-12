@@ -3,7 +3,7 @@
    Everything is generated from code: tanpura, bansuri-like flute, santoor, tabla, dhol, bells and swooshes. */
 window.Score = (function () {
   'use strict';
-  var F = window.Film, S = F.S, TOTAL = S.end;
+  var F = window.Film, S = F.S, TOTAL = F.TOTAL || F.W(S.end), w = F.W;
   var D3 = 146.83;                                         // Sa = D
   var R = { S: 1, r: 16 / 15, R: 9 / 8, g: 6 / 5, G: 5 / 4, M: 4 / 3, m: 45 / 32, P: 3 / 2, d: 8 / 5, D: 5 / 3, n: 9 / 5, N: 15 / 8 };
   function nf(tok, base) {
@@ -12,26 +12,31 @@ window.Score = (function () {
     while (tok[0] === '^') { o *= 2; tok = tok.slice(1); }
     return (base || D3 * 4) * R[tok] * o;               // flute octave: D5
   }
+  // Times in the score are on the story clock (the scenes' clock). Single hits are mapped one by one so they
+  // land on their moment; loops run at a steady tempo in film time between their mapped start and end.
   var ev = [];
-  function E(t, k, o) { o = o || {}; o.t = t; o.k = k; ev.push(o); }
+  function E0(t, k, o) { o = o || {}; o.t = t; o.k = k; ev.push(o); }
+  function E(t, k, o) { E0(w(t), k, o); }
+  function each(a, b, step, fn) { for (var t = w(a), z = w(b), i = 0; t < z - 0.01; t += step, i++) fn(t, i); }
   function phrase(t, str, beat, k, v, base) {
+    t = w(t);
     str.trim().split(/\s+/).forEach(function (tok) {
       var m = tok.match(/^([_^]*[SrRgGMmPdDnN]|-)([\d.]+)$/), d = parseFloat(m[2]) * beat;
-      if (m[1] !== '-') E(t, k || 'flute', { f: nf(m[1], base), d: d, v: v || 1 });
+      if (m[1] !== '-') E0(t, k || 'flute', { f: nf(m[1], base), d: d, v: v || 1 });
       t += d;
     });
   }
   function drone(t0, t1, v, low) {
-    for (var t = t0; t < t1 - 0.5; t += 2.4)
-      [[0, low ? 1.5 : 1.5, 0.9], [0.6, 2, 0.8], [1.2, 2, 0.8], [1.8, 1, 1.1]].forEach(function (q) { E(t + q[0], 'tan', { f: D3 * q[1] / (low ? 2 : 1), v: q[2] * v }); });
+    each(t0, t1 - 0.5, 2.4, function (t) {
+      [[0, 1.5, 0.9], [0.6, 2, 0.8], [1.2, 2, 0.8], [1.8, 1, 1.1]].forEach(function (q) { E0(t + q[0], 'tan', { f: D3 * q[1] / (low ? 2 : 1), v: q[2] * v }); });
+    });
   }
-  function pad(t, d, chord, v, bright) { chord.forEach(function (r) { E(t, 'pad', { f: D3 * r, d: d, v: v || 1, b: bright || 1 }); }); }
+  function pad(t, d, chord, v, bright) { var a = w(t), z = w(t + d); chord.forEach(function (r) { E0(a, 'pad', { f: D3 * r, d: z - a, v: v || 1, b: bright || 1 }); }); }
   // tabla bols over a span: pattern of [bol] per step
   function tabla(t0, t1, step, pat, v) {
-    var i = 0;
-    for (var t = t0; t < t1 - 0.01; t += step, i++) { var b = pat[i % pat.length]; if (b !== '-') E(t, 'bol', { b: b, v: v || 1 }); }
+    each(t0, t1, step, function (t, i) { var b = pat[i % pat.length]; if (b !== '-') E0(t, 'bol', { b: b, v: v || 1 }); });
   }
-  function swoosh(t, d, v) { E(t - d, 'swoosh', { d: d, v: v || 1 }); }
+  function swoosh(t, d, v) { E0(w(t) - d, 'swoosh', { d: d, v: v || 1 }); }
 
   /* ------------------------------------------------------------- the score */
   var minor = [1, 6 / 5, 3 / 2], major = [1, 5 / 4, 3 / 2], sus = [1, 4 / 3, 3 / 2];
@@ -68,27 +73,27 @@ window.Score = (function () {
   // the night ride
   tabla(S.ride - 0.4, S.tarain, 0.19, ['dha', 'ti', 'ge', 'na', 'dha', 'ti', 'dha', 'ge', 'ti', 'na', 'ke', 'dha', 'ge', 'na', 'dhi', 'na'], 0.75);
   pad(S.ride, 8.5, [1, 6 / 5, 3 / 2], 0.65);
-  for (var b = S.ride; b < S.tarain; b += 0.76) E(b, 'kick', { v: 0.55 });
+  each(S.ride, S.tarain, 0.76, function (t) { E0(t, 'kick', { v: 0.55 }); });
   phrase(S.ride + 0.6, 'P.5 d.5 P.5 M.5 g1 M.5 P.5 d1 P1', 0.38, 'flute', 0.9);
   phrase(S.ride + 4.6, '^S.5 n.5 d.5 P.5 M.5 g.5 R.5 S1.5', 0.38, 'flute', 0.9);
   // Tarain
   swoosh(S.tarain, 1.2, 1);
-  for (var d = S.tarain; d < S.desk; d += 0.95) { E(d, 'dhol', { v: 1 }); E(d + 0.475, 'dhol', { v: 0.55, hi: 1 }); }
+  each(S.tarain, S.desk, 0.95, function (t) { E0(t, 'dhol', { v: 1 }); E0(t + 0.475, 'dhol', { v: 0.55, hi: 1 }); });
   E(67.6, 'boom', { v: 1.2 }); E(67.6, 'shimmer', { v: 0.6 });
   pad(S.tarain, 7.6, [0.5, 1, 6 / 5, 3 / 2], 0.9, 0.8);
   phrase(68.2, 'P1 d.5 P.5 M1 g1 R.5 S1.5', 0.5, 'flute', 0.8);
 
   // Act 2: the evidence — sparse and curious
   swoosh(S.desk + 0.2, 1.1, 0.9); E(S.desk + 0.2, 'boom', { v: 0.5 });
-  for (var c = S.desk + 1; c < S.raso; c += 0.5) E(c, 'tick', { v: c % 1 < 0.25 ? 0.6 : 0.4 });
+  each(S.desk + 1, S.raso, 0.5, function (t, i) { E0(t, 'tick', { v: i % 2 ? 0.4 : 0.6 }); });
   pad(S.desk + 0.4, 6.1, [0.5, 1, 6 / 5], 0.5, 0.6);
   drone(S.desk + 0.5, S.closing, 0.55, true);
   var bass = ['S', 'S', 'g', 'S', 'P', 'S', 'g', 'n'];
-  for (var t = S.raso, i = 0; t < S.closing - 0.3; t += 0.33, i++) {
-    if (i % 2 === 0) E(t, 'bass', { f: nf('_' + bass[(i / 2 | 0) % bass.length], D3 / 2 * 4), v: 0.75 });
-    if (i % 4 === 2) E(t, 'shaker', { v: 0.35 });
-    if (i % 8 === 4) E(t, 'pluck', { f: nf(['g', 'P', 'n', 'P'][(i / 8 | 0) % 4], D3 * 2), v: 0.45 });
-  }
+  each(S.raso, S.closing - 0.3, 0.33, function (t, i) {
+    if (i % 2 === 0) E0(t, 'bass', { f: nf('_' + bass[(i / 2 | 0) % bass.length], D3 / 2 * 4), v: 0.75 });
+    if (i % 4 === 2) E0(t, 'shaker', { v: 0.35 });
+    if (i % 8 === 4) E0(t, 'pluck', { f: nf(['g', 'P', 'n', 'P'][(i / 8 | 0) % 4], D3 * 2), v: 0.45 });
+  });
   [S.raso, S.vijaya, S.plates, S.echoes, S.map, S.verdict].forEach(function (t, i) { swoosh(t + 0.3, 0.9, 0.7); pad(t + 0.2, 6, i % 2 ? [1, 6 / 5, 3 / 2] : [1, 4 / 3, 8 / 5], 0.4, 0.7); });
   [86.4, 87.15, 87.9, 88.65].forEach(function (t2, i) { E(t2 + 0.3, 'pluck', { f: nf(['P', 'n', '^S', '^g'][i], D3 * 4), v: 0.6 }); });
   E(89.0, 'chime', { v: 0.6 });
@@ -110,13 +115,13 @@ window.Score = (function () {
   drone(S.closing, S.end - 1.5, 0.9);
   pad(S.closing, 5.5, [1, 5 / 4, 3 / 2, 2], 0.85, 1.2); pad(S.closing + 5.5, 5.6, [4 / 3, 5 / 3, 2, 8 / 3], 0.8, 1.2);
   phrase(151.0, 'G1 m.5 D.5 N1 ^S2 N.5 D.5 P2', 0.6);
-  for (var a2 = 0; a2 < 16; a2++) E(S.closing + 0.3 + a2 * 0.65, 'santoor', { f: nf(['S', 'G', 'P', '^S', 'D', 'P', 'G', 'P'][a2 % 8], D3 * 2), v: 0.5 });
+  each(S.closing + 0.3, S.closing + 0.3 + 16 * 0.65, 0.65, function (t, i) { E0(t, 'santoor', { f: nf(['S', 'G', 'P', '^S', 'D', 'P', 'G', 'P'][i % 8], D3 * 2), v: 0.5 }); });
   // outro: celebration
   swoosh(S.outro, 1, 1); E(S.outro + 0.9, 'shimmer', { v: 1 }); E(S.outro + 0.9, 'boom', { v: 0.7 });
   tabla(S.outro + 0.9, S.end - 1.4, 0.26, ['dha', 'ge', 'na', 'ti', 'na', 'ke', 'dhi', 'na'], 0.7);
-  for (var kb = S.outro + 0.9; kb < S.end - 1.4; kb += 1.04) E(kb, 'kick', { v: 0.6 });
+  each(S.outro + 0.9, S.end - 1.4, 1.04, function (t) { E0(t, 'kick', { v: 0.6 }); });
   [[S.outro + 0.9, major], [S.outro + 5.06, [4 / 3, 5 / 3, 2]], [S.outro + 9.2, [3 / 2, 15 / 8, 9 / 4]], [S.outro + 13.4, major]].forEach(function (q) { pad(q[0], 4.2, q[1], 0.7, 1.3); });
-  for (var sr = 0; sr < 48; sr++) E(S.outro + 0.9 + sr * 0.26, 'santoor', { f: nf(['S', 'G', 'P', 'G', '^S', 'P', 'G', 'P'][sr % 8], D3 * 2), v: sr % 2 ? 0.35 : 0.5 });
+  each(S.outro + 0.9, S.outro + 0.9 + 48 * 0.26, 0.26, function (t, i) { E0(t, 'santoor', { f: nf(['S', 'G', 'P', 'G', '^S', 'P', 'G', 'P'][i % 8], D3 * 2), v: i % 2 ? 0.35 : 0.5 }); });
   phrase(S.outro + 1.4, 'G.5 P.5 D1 ^S.5 D.5 P1 G.5 R.5 S1', 0.52);
   E(168.6, 'pop', { v: 1 }); E(168.6, 'shimmer', { v: 0.8 });
   [0, 0.12, 0.24].forEach(function (o) { E(170.2 + o, 'bell', { f: 1760, v: 0.6 }); });

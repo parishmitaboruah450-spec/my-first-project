@@ -65,9 +65,24 @@ It ends with a "legend vs history" checklist and a channel outro with a
 subscribe animation.
 
 Everything is drawn and animated in code (SVG and the Web Animations API).
-The soundtrack is synthesised in `score.js`, which provides a tanpura,
-bansuri, santoor, tabla, dhol and bells. Open `sanyogita/index.html` to play
-it. The player has chapters, a scrubber, sound and fullscreen.
+The music is synthesised in `score.js`, which provides a tanpura, bansuri,
+santoor, tabla, dhol and bells. Open `sanyogita/index.html` to play it. The
+player has chapters, a scrubber, sound and fullscreen.
+
+**Narration.** A narrator reads the whole script. The voice is the open
+Kokoro-82M text-to-speech model (Apache-2.0, voice `af_heart`). Indian names
+have hand-written pronunciations in `tools/tts.py`, and the channel name is
+read as "SAM-ist-lay". The voice pipeline works like this:
+
+1. `tools/narration.json` holds the script, with each line pinned to its
+   moment in the scenes.
+2. `tools/tts.py` speaks each line and writes `voice.js` with every line's
+   length.
+3. The animation engine then *warps* the story clock. Each line's stretch of
+   film lasts at least as long as the line, and everything else is scaled so
+   the film stays at 2:58. The captions, scenes and music follow the warp.
+4. `tools/voice_track.py` places the clips at their film times. The music is
+   ducked under the voice, and the mix becomes `soundtrack.mp3`.
 
 `index.html?record` shows only the stage. The export scripts use it to step
 through the film frame by frame for video. Shorts must be 3 minutes or less,

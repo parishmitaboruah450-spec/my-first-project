@@ -1,11 +1,12 @@
 /* player.js — particles drawn on a canvas (dust, petals, embers, sparkles) and the player controls. */
 (function (F) {
   'use strict';
-  var S = F.S, TOTAL = S.end, O = F.O = F.O || {}, W = 1080, H = 1920;
+  var S = F.S, O = F.O = F.O || {}, W = 1080, H = 1920;
   var RECORD = /[?&]record\b/.test(location.search);
   if (RECORD) document.documentElement.classList.add('rec');
 
-  F.finish(TOTAL);
+  F.finish(S.end);
+  var TOTAL = F.TOTAL;
 
   /* ------------------------------------------------------------------ particles */
   var cv = document.getElementById('fx'), ctx = cv.getContext('2d'), TAU = Math.PI * 2;
@@ -91,10 +92,11 @@
     var st = document.getElementById('stage').getBoundingClientRect(), r = el.getBoundingClientRect();
     return [t, (r.left + r.width / 2 - st.left) * W / st.width, (r.top + r.height * (el.dataset.ay ? +el.dataset.ay : 0.5) - st.top) * H / st.height];
   }
-  if (O.garlandEl) O.garland = spot(O.garlandEl, O.garlandT + 0.2), O.garland && (O.garland[0] = O.garlandT);
-  if (O.clickEl) O.click = spot(O.clickEl, O.clickT + 0.05), O.click && (O.click[0] = O.clickT);
+  if (O.garlandEl) O.garland = spot(O.garlandEl, F.W(O.garlandT + 0.2)), O.garland && (O.garland[0] = O.garlandT);
+  if (O.clickEl) O.click = spot(O.clickEl, F.W(O.clickT + 0.05)), O.click && (O.click[0] = O.clickT);
 
-  F.onFrame(function (t) {
+  F.onFrame(function (ft) {
+    var t = F.Winv(ft);
     ctx.clearRect(0, 0, W, H);
     drawMotes(t, 0.5 * env(t, 0.5, S.kannauj + 0.5, 1.5, 1), '#ffdca0');
     drawMotes(t, 0.6 * env(t, S.portrait, S.ride + 0.5, 1, 1), '#ffe2ae');
@@ -118,7 +120,8 @@
   scrub.max = TOTAL;
   audio.addEventListener('error', function () { audioOK = false; soundbtn.disabled = true; soundbtn.style.opacity = 0.4; });
 
-  var CH = [[0, 'Title'], [S.kannauj, 'The legend'], [S.hall, 'The swayamvara'], [S.ride, 'The ride'], [S.question, 'The evidence'], [S.map, 'Jaichand'], [S.verdict, 'The verdict'], [S.outro, 'samistlei']];
+  var CH = [[0, 'Title'], [S.kannauj, 'The legend'], [S.hall, 'The swayamvara'], [S.ride, 'The ride'], [S.question, 'The evidence'], [S.map, 'Jaichand'], [S.verdict, 'The verdict'], [S.outro, 'samistlei']]
+    .map(function (q) { return [F.W(q[0]), q[1]]; });
   function fmt(t) { t = Math.max(0, Math.floor(t)); return Math.floor(t / 60) + ':' + ('0' + (t % 60)).slice(-2); }
   var chBtns = CH.map(function (q) {
     var b = document.createElement('button'); b.type = 'button'; b.textContent = q[1];

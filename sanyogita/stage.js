@@ -179,13 +179,18 @@
 
   /* --------------------------------------------------------------- captions */
   var capsEl = document.getElementById('caps');
+  // Captions follow the narration: a caption written at story time t0 shows while its line is spoken.
   F.caption = function (t0, t1, textStr) {
+    var ln = F.lineAt(t0), a, b;
+    if (ln) { a = ln.f; b = Math.min(ln.f + ln.d + 0.4, ln.nextF - 0.06); textStr = ln.text; }
+    else { a = F.W(t0); b = F.W(t1); }
     var d = document.createElement('div');
     d.className = 'cap'; d.textContent = textStr;
     capsEl.appendChild(d);
-    T(d, 'opacity', [[t0, 0], [t0 + 0.45, 1], [t1 - 0.4, 1], [t1, 0]]);
-    T(d, 'transform', [[t0, 'translateY(.7cqw)'], [t0 + 0.5, 'translateY(0)'], [t1 - 0.4, 'translateY(0)'], [t1, 'translateY(-.35cqw)']], 'ease-out');
-    T(d, 'visibility', [[Math.max(0, t0 - 0.02), 'hidden'], [t0, 'visible'], [t1, 'visible'], [t1 + 0.02, 'hidden']], 'linear');
+    var R = F.Traw;
+    R(d, 'opacity', [[a, 0], [a + 0.3, 1], [b - 0.3, 1], [b, 0]]);
+    R(d, 'transform', [[a, 'translateY(.7cqw)'], [a + 0.35, 'translateY(0)'], [b - 0.3, 'translateY(0)'], [b, 'translateY(-.35cqw)']], 'ease-out');
+    R(d, 'visibility', [[Math.max(0, a - 0.02), 'hidden'], [a, 'visible'], [b, 'visible'], [b + 0.02, 'hidden']], 'linear');
     return d;
   };
 })(window.Film);
