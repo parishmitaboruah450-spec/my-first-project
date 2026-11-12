@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rani Sanyogita: The Historical Truth · samistlei (Short)</title>
+<meta name="description" content="An animated story: the legend of Rani Sanyogita and Prithviraj Chauhan, and what the historical sources actually say.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Playfair+Display:ital,wght@1,800&family=Special+Elite&family=Yatra+One&display=swap" rel="stylesheet">
+<style>
+:root { color-scheme: dark; --hall: #0d0a0f; --cream: #f1e3c4; --gold: #e8b84a; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh; background: radial-gradient(ellipse at 50% 0%, #2a1a24 0%, var(--hall) 62%) fixed, var(--hall);
+  color: var(--cream); font-family: "Cormorant Garamond", Georgia, serif;
+  display: flex; flex-direction: column; align-items: center; padding: 18px 16px 30px;
+}
+.top { width: 100%; max-width: 540px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 18px; margin-bottom: 12px; }
+.top h1 { font-family: Cinzel, serif; font-weight: 800; font-size: clamp(1rem, 2.2vw, 1.45rem); letter-spacing: .08em; margin: 0; color: var(--gold); }
+.top h1 span { font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 500; letter-spacing: 0; color: var(--cream); opacity: .8; margin-left: .5em; }
+.top a { color: var(--cream); text-decoration: none; border-bottom: 1px solid rgba(241, 227, 196, .4); font-size: 1.05rem; }
+
+.player { width: min(100%, 540px, calc((100vh - 150px) * 9 / 16)); min-width: 0; }
+.stage {
+  position: relative; width: 100%; aspect-ratio: 9 / 16; overflow: hidden; container-type: inline-size;
+  background: #000; border-radius: 6px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .6), 0 20px 70px rgba(0, 0, 0, .6);
+  user-select: none; -webkit-user-select: none;
+}
+.stage > svg, .stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage > canvas { pointer-events: none; }
+.grain {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: overlay; opacity: .34;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 58%, rgba(0, 0, 0, .45) 100%); }
+.caps { position: absolute; left: 0; right: 0; top: 8.4%; height: 17%; pointer-events: none; }
+.cap {
+  position: absolute; inset: 0 6%; display: flex; align-items: center; justify-content: center; text-align: center;
+  font: 700 5.15cqw/1.16 "Cormorant Garamond", Georgia, serif; color: #fbf3df; opacity: 0; visibility: hidden;
+  text-shadow: 0 .3cqw 1.2cqw rgba(0, 0, 0, .9), 0 0 .4cqw rgba(0, 0, 0, .8); text-wrap: balance;
+}
+svg text { user-select: none; }
+
+.overlay {
+  position: absolute; inset: 0; display: grid; place-items: end center; padding: 0 0 30cqw; margin: 0; width: 100%;
+  background: rgba(8, 5, 10, .12); border: 0; cursor: pointer; color: inherit; font: inherit;
+}
+.overlay span {
+  display: inline-flex; align-items: center; gap: .6em; background: var(--gold); color: #1c1014;
+  font: 800 clamp(.8rem, 4.2cqw, 1.5rem) Cinzel, serif; letter-spacing: .12em; padding: .7em 1.6em .7em 1.3em; border-radius: 999px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, .5);
+}
+.overlay svg { width: 1.1em; height: 1.1em; }
+.overlay:focus-visible span { outline: 3px solid #fff; outline-offset: 3px; }
+.overlay[hidden] { display: none; }
+
+.controls { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.controls button {
+  appearance: none; border: 1px solid rgba(241, 227, 196, .35); background: #231a22; color: var(--cream);
+  border-radius: 999px; height: 38px; min-width: 38px; padding: 0 12px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; font: inherit; font-size: 1rem;
+}
+.controls button:hover { background: #34262f; }
+.controls button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.controls button[aria-pressed="true"] { background: var(--cream); color: #1c1014; }
+.controls svg { width: 16px; height: 16px; fill: currentColor; }
+.scrub { flex: 1 1 200px; min-width: 120px; accent-color: var(--gold); height: 24px; }
+.time { font-variant-numeric: tabular-nums; font-size: 1.05rem; opacity: .85; min-width: 96px; text-align: center; }
+.chapters { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.chapters button {
+  appearance: none; border: 1px solid rgba(241, 227, 196, .25); background: transparent; color: var(--cream);
+  border-radius: 999px; padding: 3px 12px; cursor: pointer; font: inherit; font-size: .98rem;
+}
+.chapters button.on { border-color: var(--gold); color: var(--gold); background: rgba(232, 184, 74, .1); }
+.chapters button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.notes { width: 100%; max-width: 540px; margin-top: 18px; font-size: 1.05rem; line-height: 1.5; opacity: .8; }
+.notes h2 { font-family: Cinzel, serif; font-size: 1rem; letter-spacing: .1em; color: var(--gold); margin: 0 0 .3em; }
+.notes p { margin: 0 0 .6em; max-width: 78ch; }
+
+.rec body { padding: 0; display: block; background: #000; }
+.rec .top, .rec .controls, .rec .chapters, .rec .notes, .rec .overlay { display: none !important; }
+.rec .player { width: 100vw; }
+.rec .stage { border-radius: 0; box-shadow: none; }
+@media (max-width: 560px) { .controls .lbl { display: none; } .time { min-width: 0; } }
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>RANI SANYOGITA <span>The historical truth · an animated story</span></h1>
+  <a href="../index.html">← more stories</a>
+</div>
+
+<div class="player">
+  <div class="stage" id="stage">
+    <svg id="film" viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Animated story: the legend and the history of Rani Sanyogita"></svg>
+    <canvas id="fx" width="1080" height="1920"></canvas>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+    <div class="caps" id="caps"></div>
+    <button class="overlay" id="overlay" type="button" aria-label="Play the film">
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg>WATCH</span>
+    </button>
+  </div>
+  <div class="controls" role="group" aria-label="Player controls">
+    <button id="playbtn" type="button" aria-label="Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="playicon" d="M7 4.5v15l13-7.5z"/></svg></button>
+    <button id="restart" type="button" aria-label="Restart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg></button>
+    <input class="scrub" id="scrub" type="range" min="0" max="178" step="0.01" value="0" aria-label="Seek">
+    <span class="time" id="time">0:00 / 2:58</span>
+    <button id="soundbtn" type="button" aria-pressed="true" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path id="soundwave" d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="lbl">Sound</span></button>
+    <button id="fsbtn" type="button" aria-label="Fullscreen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5v2H6v3H4zm10-5h6v5h-2V6h-4V4zM4 15h2v3h3v2H4v-5zm14 3v-3h2v5h-6v-2h4z"/></svg></button>
+  </div>
+  <div class="chapters" id="chapters"></div>
+</div>
+
+<div class="notes">
+  <h2>ABOUT THE HISTORY</h2>
+  <p>The romance of Sanyogita and Prithviraj comes from the <i>Prithviraj Raso</i>, whose surviving versions were written down centuries after the events. The <i>Prithviraja Vijaya</i>, composed in Prithviraj's lifetime, does not mention her in the part that survives, and no inscription names her, so historians disagree on whether she lived. Prithviraj, Jayachandra (Jaichand) of the Gahadavala dynasty, his son Harishchandra, and the battles of Tarain (1192) and Chandawar (1194) are all well attested.</p>
+  <p>Space plays or pauses. The arrow keys skip five seconds.</p>
+</div>
+
+<audio id="track" src="soundtrack.mp3" preload="auto"></audio>
+<script src="engine.js"></script>
+<script src="assets.js"></script>
+<script src="stage.js"></script>
+<script src="legend.js"></script>
+<script src="evidence.js"></script>
+<script src="finale.js"></script>
+<script src="player.js"></script>
+</body>
+</html>
