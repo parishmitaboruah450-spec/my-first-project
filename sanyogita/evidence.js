@@ -16,7 +16,12 @@
     if (sub) F.text(h, 540, y + 54, sub, { font: '"Cormorant Garamond", serif', size: 36, style: 'italic', weight: 600, fill: '#efe2c2', anchor: 'middle' });
     return rise(h, t);
   }
-  function scene(t0, t1) { var sc = F.scene(F.L2, t0, t1, 0.9, '540px 960px'); return sc; }
+  // Act 2 scenes share one backdrop, so each must fade out as the next fades in (they have no background of their own)
+  function scene(t0, t1) {
+    var sc = F.scene(F.L2, t0, t1, 0.9, '540px 960px'), out = mk('g', {}, sc.cam);
+    T(out, 'opacity', [[t1 - 0.05, 1], [t1 + 0.75, 0]]);
+    return { g: sc.g, cam: out, frame: sc.cam };
+  }
   // a palm-leaf style folio (pothi page)
   function folio(x, y, w, h, seed) {
     return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="12" fill="url(#g-paper)" stroke="#9b7a46" stroke-width="2"/>' +
@@ -64,7 +69,7 @@
     var mg = F.g(F.L2, magnifier(130));
     T(mg, 'transform', [[t0 + 2.0, 'translate(1280px,1500px) rotate(-10deg)'], [t0 + 3.2, 'translate(640px,1160px) rotate(0deg)', 'ease-out'], [t1 - 0.4, 'translate(470px,960px) rotate(8deg)'], [t1 + 0.6, 'translate(-300px,700px) rotate(8deg)', 'ease-in']]);
     T(mg, 'opacity', [[t0 + 2.0, 0], [t0 + 2.4, 1]]);
-    T(sc.cam, 'transform', [[t0, 'scale(1)'], [t1 + 1, 'scale(1.05)']], 'linear');
+    T(sc.frame || sc.cam, 'transform', [[t0, 'scale(1)'], [t1 + 1, 'scale(1.05)']], 'linear');
     F.caption(73.0, 78.2, 'So what does history actually say? Let\'s look at the evidence.');
   })();
 
@@ -123,7 +128,7 @@
     F.g(verdict, '<rect x="220" y="1500" width="640" height="84" rx="42" fill="#0d2224" stroke="#9ed8d2" stroke-width="2.5"/>');
     F.text(verdict, 540, 1555, 'poetry, not a record', { font: '"Cormorant Garamond", serif', size: 42, weight: 700, style: 'italic', fill: '#fff', anchor: 'middle' });
     rise(verdict, 89.0);
-    T(sc.cam, 'transform', [[t0, 'scale(1.04)'], [t1 + 1, 'scale(1)']], 'linear');
+    T(sc.frame || sc.cam, 'transform', [[t0, 'scale(1.04)'], [t1 + 1, 'scale(1)']], 'linear');
     F.caption(78.8, 84.8, 'The whole story comes from one source: the Prithviraj Raso, an epic poem credited to Chand Bardai, Prithviraj\'s court poet.');
     F.caption(85.2, 91.2, 'But its surviving versions were written down centuries later, and are full of added verses. Historians read it as poetry, not a record.');
   })();
@@ -170,7 +175,7 @@
     var sweep = [[99.2, 'translate(240px,820px)'], [100.0, 'translate(840px,880px)'], [100.6, 'translate(240px,990px)'], [101.4, 'translate(820px,1080px)'], [102.1, 'translate(300px,1220px)']];
     T(mg, 'transform', sweep);
     T(mg, 'opacity', [[99.0, 0], [99.3, 1], [102.2, 1], [102.6, 0]]);
-    T(sc.cam, 'transform', [[t0, 'scale(1.03)'], [t1 + 1, 'scale(1)']], 'linear');
+    T(sc.frame || sc.cam, 'transform', [[t0, 'scale(1.03)'], [t1 + 1, 'scale(1)']], 'linear');
     F.caption(91.8, 97.8, 'A poem from Prithviraj\'s own lifetime does exist: the Sanskrit Prithviraja Vijaya, by his court poet Jayanaka.');
     F.caption(98.2, 104.2, 'It praises his family, his court and his battles — but in the part that survives, Sanyogita never appears.');
   })();
@@ -206,7 +211,7 @@
     F.text(c2, 244, 1478, 'a daughter?', { font: '"Cormorant Garamond", serif', size: 34, style: 'italic', weight: 600, fill: '#d9e9e4' });
     F.text(c2, 244, 1522, 'NOT NAMED', { size: 44, weight: 800, fill: '#9fb6b4', spacing: 4 });
     rise(c2, 107.6);
-    T(sc.cam, 'transform', [[t0, 'scale(1.03)'], [t1 + 1, 'scale(1)']], 'linear');
+    T(sc.frame || sc.cam, 'transform', [[t0, 'scale(1.03)'], [t1 + 1, 'scale(1)']], 'linear');
     F.caption(104.8, 109.0, 'Jaichand\'s own copper-plate grants name his son and heir, Harishchandra — but never a daughter.');
     F.caption(109.3, 113.2, 'Then again, grants like these rarely named daughters at all.');
   })();
@@ -237,7 +242,7 @@
       T(gg, 'transform', [[ta, 'translateY(30px) scale(.9)'], [ta + 0.8, 'translateY(0px) scale(1)', 'ease-out'], [t1, 'translateY(-26px) scale(1)']]);
       F.origin(gg);
     });
-    T(sc.cam, 'transform', [[t0, 'scale(1)'], [t1 + 1, 'scale(1.06)']], 'linear');
+    T(sc.frame || sc.cam, 'transform', [[t0, 'scale(1)'], [t1 + 1, 'scale(1.06)']], 'linear');
     F.caption(113.8, 122.2, 'Later tellings don\'t even agree on her name — Sanyogita, Sanjogita, Samyukta — or on what became of her.');
   })();
 
@@ -293,7 +298,7 @@
     F.text(note, 262, 1440, 'Jaichand\'s "betrayal"', { size: 36, weight: 800, fill: '#fff', spacing: 1 });
     F.text(note, 262, 1486, 'no source of the time says so', { font: '"Cormorant Garamond", serif', size: 34, style: 'italic', weight: 600, fill: '#d9e9e4' });
     rise(note, 131.6);
-    T(sc.cam, 'transform', [[t0, 'scale(1.02)'], [t1 + 1, 'scale(1)']], 'linear');
+    T(sc.frame || sc.cam, 'transform', [[t0, 'scale(1.02)'], [t1 + 1, 'scale(1)']], 'linear');
     F.caption(122.8, 129.3, 'What is real is the rivalry: Jaichand of the Gahadavala dynasty ruled Kannauj and Varanasi, while Prithviraj ruled from Ajmer to Delhi.');
     F.caption(129.7, 136.2, 'And no source of the time says Jaichand betrayed him. He fell to the same invader at Chandawar, in 1194.');
   })();
@@ -334,7 +339,7 @@
     F.origin(sw);
     T(sw, 'transform', [[144.4, 'scale(2.4)'], [144.75, 'scale(1)', 'ease-in']]);
     T(sw, 'opacity', [[144.4, 0], [144.55, 1]]);
-    T(sc.cam, 'transform', [[t0, 'scale(1.02)'], [t1 + 1, 'scale(1)']], 'linear');
+    T(sc.frame || sc.cam, 'transform', [[t0, 'scale(1.02)'], [t1 + 1, 'scale(1)']], 'linear');
     F.caption(136.8, 143.0, 'So, was Sanyogita real? Many historians see the romance as a poet\'s invention.');
     F.caption(143.4, 150.2, 'Others think a real princess and a real elopement may lie behind it — remembered, and embellished, by the bards.');
   })();
