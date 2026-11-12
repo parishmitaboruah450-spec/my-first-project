@@ -328,8 +328,8 @@
     T(onStat.el, 'opacity', [[tPlace, 0], [tPlace + 0.12, 1]]);
     F.O = F.O || {}; F.O.garlandEl = onStat.el; F.O.garlandT = tPlace;
     var tag = F.g(g, st('M1022 520 H1046', C.ivory, 2) + c(1022, 520, 4, C.ivory));
-    F.text(tag, 1052, 514, 'statue of', { font: '"Cormorant Garamond", serif', size: 24, style: 'italic', weight: 600 });
-    F.text(tag, 1052, 540, 'Prithviraj', { font: '"Cormorant Garamond", serif', size: 28, style: 'italic', weight: 700, fill: C.goldL });
+    F.text(tag, 1052, 514, 'statue of', { font: '"Cormorant Garamond", serif', size: 24, style: 'italic', weight: 600, hi: 'पृथ्वीराज' });
+    F.text(tag, 1052, 540, 'Prithviraj', { font: '"Cormorant Garamond", serif', size: 28, style: 'italic', weight: 700, fill: C.goldL, hi: 'की मूर्ति' });
     F.fade(tag, tSpot + 1.4, 44.6, 0.5);
 
     // spotlight

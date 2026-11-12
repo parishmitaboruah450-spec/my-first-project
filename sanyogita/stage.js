@@ -71,10 +71,19 @@
     return mk('rect', a, parent);
   };
   F.glow = function (parent, x, y, r, grad, op) { return mk('circle', { cx: x, cy: y, r: r, fill: 'url(#' + grad + ')', opacity: op === undefined ? 1 : op }, parent); };
+  var DEV = /[\u0900-\u097F]/;
   F.text = function (parent, x, y, str, o) {
     o = o || {};
-    var a = { x: x, y: y, 'font-family': o.font || 'Cinzel, serif', 'font-size': o.size || 40, 'font-weight': o.weight || 600, fill: o.fill || C.ivory, 'text-anchor': o.anchor || 'start' };
-    if (o.spacing) a['letter-spacing'] = o.spacing;
+    if (F.LANG === 'hi') { var h = o.hi !== undefined ? o.hi : (F.HI && F.HI[str]); if (h !== undefined) str = h; }
+    var font = o.font || 'Cinzel, serif', weight = o.weight || 600, spacing = o.spacing;
+    if (DEV.test(str)) {
+      // Devanagari: display faces become Yatra One, the serif becomes Tiro Devanagari; no letter-spacing (it breaks the headline)
+      if (/Cormorant/.test(font)) { font = '"Tiro Devanagari Hindi", serif'; weight = 400; }
+      else if (!/Yatra|Tiro/.test(font)) { font = '"Yatra One", serif'; weight = 400; }
+      spacing = 0;
+    }
+    var a = { x: x, y: y, 'font-family': font, 'font-size': o.size || 40, 'font-weight': weight, fill: o.fill || C.ivory, 'text-anchor': o.anchor || 'start' };
+    if (spacing) a['letter-spacing'] = spacing;
     if (o.style) a['font-style'] = o.style;
     if (o.more) for (var k in o.more) a[k] = o.more[k];
     var t = mk('text', a, parent); t.textContent = str; return t;

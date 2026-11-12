@@ -10,8 +10,9 @@ window.Film = (function () {
   /* Story clock -> film clock. Scenes are written on the story clock; the narration decides how long each
      stretch really lasts. Each line's stretch (to the next line) lasts at least as long as the line itself,
      and every stretch is scaled by one shared factor k chosen so the film keeps its total length. */
-  var knots = null;
-  F.setVoice = function (v) { F.VOICE = v; knots = null; };
+  var knots = null, VOICES = {};
+  F.LANG = /[?&]lang=hi\b/.test(location.search) ? 'hi' : 'en';
+  F.setVoice = function (v, lang) { VOICES[lang || 'en'] = v; F.VOICE = VOICES[F.LANG] || VOICES.en; knots = null; };
   function build() {
     var end = F.S && F.S.end;
     if (!F.VOICE || !end) return null;

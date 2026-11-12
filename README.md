@@ -84,6 +84,13 @@ read as "SAM-ist-lay". The voice pipeline works like this:
 4. `tools/voice_track.py` places the clips at their film times. The music is
    ducked under the voice, and the mix becomes `soundtrack.mp3`.
 
+**Hindi version.** `sanyogita/index.html?lang=hi` is the same film in Hindi.
+It has Hindi narration from Kokoro's Hindi voice `hm_omega`, written in
+`tools/narration-hi.json`, plus Hindi captions and Hindi on-screen text
+(`hindi.js`) set in Yatra One, Tiro Devanagari Hindi and Noto Serif
+Devanagari. Because the warp follows whichever narration is playing, the
+Hindi cut has its own timing, and its own soundtrack in `soundtrack-hi.mp3`.
+
 `index.html?record` shows only the stage. The export scripts use it to step
 through the film frame by frame for video. Shorts must be 3 minutes or less,
 and this one runs 2:58.

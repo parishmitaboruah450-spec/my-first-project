@@ -7,7 +7,7 @@
 <meta name="description" content="An animated story: the legend of Rani Sanyogita and Prithviraj Chauhan, and what the historical sources actually say.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Playfair+Display:ital,wght@1,800&family=Special+Elite&family=Yatra+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Playfair+Display:ital,wght@1,800&family=Yatra+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=Noto+Serif+Devanagari:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root { color-scheme: dark; --hall: #0d0a0f; --cream: #f1e3c4; --gold: #e8b84a; }
 * { box-sizing: border-box; }
@@ -42,6 +42,7 @@ body {
   text-shadow: 0 .3cqw 1.2cqw rgba(0, 0, 0, .9), 0 0 .4cqw rgba(0, 0, 0, .8); text-wrap: balance;
 }
 svg text { user-select: none; }
+.lang-hi .cap { font: 600 4.55cqw/1.5 "Noto Serif Devanagari", "Tiro Devanagari Hindi", serif; }
 
 .overlay {
   position: absolute; inset: 0; display: grid; place-items: end center; padding: 0 0 30cqw; margin: 0; width: 100%;
@@ -89,7 +90,7 @@ svg text { user-select: none; }
 <body>
 <div class="top">
   <h1>RANI SANYOGITA <span>The historical truth · an animated story</span></h1>
-  <a href="../index.html">← more stories</a>
+  <a href="../index.html">← more stories</a> · <a href="?lang=hi" id="langlink">हिंदी में देखें</a>
 </div>
 
 <div class="player">
@@ -123,6 +124,8 @@ svg text { user-select: none; }
 <audio id="track" src="soundtrack.mp3" preload="auto"></audio>
 <script src="engine.js"></script>
 <script src="voice.js"></script>
+<script src="voice-hi.js"></script>
+<script src="hindi.js"></script>
 <script src="assets.js"></script>
 <script src="stage.js"></script>
 <script src="legend.js"></script>

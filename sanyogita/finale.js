@@ -117,7 +117,6 @@
 
     var more = mk('g', {}, g);
     F.text(more, 540, BY + 260, 'more true stories from Indian history', { font: '"Cormorant Garamond", serif', size: 46, weight: 700, style: 'italic', fill: '#f3d489', anchor: 'middle' });
-    F.text(more, 540, BY + 320, 'every week', { font: '"Cormorant Garamond", serif', size: 40, weight: 600, style: 'italic', fill: '#efe2c2', anchor: 'middle' });
     rise(more, 171.6);
     T(sc.cam, 'transform', [[t0, 'scale(1.06)'], [t0 + 2.5, 'scale(1)', 'ease-out'], [t1, 'scale(1.02)']]);
     F.caption(162.0, 168.0, 'Thanks for watching! Subscribe to samistlei for more true stories from history.');

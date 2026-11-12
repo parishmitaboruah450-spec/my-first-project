@@ -152,11 +152,13 @@
     F.g(bar, '<rect x="190" y="1480" width="700" height="96" rx="48" fill="#fff"/>' + '<g transform="translate(250,1528) scale(.2)">' + magnifier(90).replace(/#cfe6ff/g, '#cfe6ff') + '</g>');
     var q = F.text(bar, 300, 1544, '', { font: '"Cormorant Garamond", serif', size: 44, weight: 700, fill: INK });
     rise(bar, tS - 0.4, 0.6);
-    var word = 'Sanyogita';
-    for (var k = 1; k <= word.length; k++) {
-      var tt = F.text(bar, 300, 1544, word.slice(0, k), { font: '"Cormorant Garamond", serif', size: 44, weight: 700, fill: INK });
-      var ti = tS + k * 0.09;
-      T(tt, 'opacity', k < word.length ? [[ti, 0], [ti + 0.01, 1], [ti + 0.09, 1], [ti + 0.1, 0]] : [[ti, 0], [ti + 0.01, 1]], 'linear');
+    // type the name one character (grapheme) at a time
+    var word = F.LANG === 'hi' ? 'संयोगिता' : 'Sanyogita', parts = Array.from(new Intl.Segmenter(F.LANG, { granularity: 'grapheme' }).segment(word), function (g) { return g.segment; });
+    var step = 0.81 / parts.length;
+    for (var k = 1; k <= parts.length; k++) {
+      var tt = F.text(bar, 300, 1544, parts.slice(0, k).join(''), { font: '"Cormorant Garamond", serif', size: 44, weight: 700, fill: INK });
+      var ti = tS + k * step;
+      T(tt, 'opacity', k < parts.length ? [[ti, 0], [ti + 0.01, 1], [ti + step, 1], [ti + step + 0.01, 0]] : [[ti, 0], [ti + 0.01, 1]], 'linear');
     }
     void q;
     var res = mk('g', {}, bar);

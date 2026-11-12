@@ -117,11 +117,15 @@
   var scrub = document.getElementById('scrub'), timeEl = document.getElementById('time');
   var soundbtn = document.getElementById('soundbtn'), soundwave = document.getElementById('soundwave'), chaptersEl = document.getElementById('chapters');
   var audio = document.getElementById('track');
+  if (F.LANG === 'hi') {
+    audio.src = 'soundtrack-hi.mp3'; document.documentElement.lang = 'hi'; document.documentElement.classList.add('lang-hi');
+    var ll = document.getElementById('langlink'); if (ll) { ll.textContent = 'Watch in English'; ll.href = '?'; }
+  }
   scrub.max = TOTAL;
   audio.addEventListener('error', function () { audioOK = false; soundbtn.disabled = true; soundbtn.style.opacity = 0.4; });
 
   var CH = [[0, 'Title'], [S.kannauj, 'The legend'], [S.hall, 'The swayamvara'], [S.ride, 'The ride'], [S.question, 'The evidence'], [S.map, 'Jaichand'], [S.verdict, 'The verdict'], [S.outro, 'samistlei']]
-    .map(function (q) { return [F.W(q[0]), q[1]]; });
+    .map(function (q, i) { return [F.W(q[0]), F.LANG === 'hi' && F.HI_CHAPTERS ? F.HI_CHAPTERS[i] : q[1]]; });
   function fmt(t) { t = Math.max(0, Math.floor(t)); return Math.floor(t / 60) + ':' + ('0' + (t % 60)).slice(-2); }
   var chBtns = CH.map(function (q) {
     var b = document.createElement('button'); b.type = 'button'; b.textContent = q[1];
